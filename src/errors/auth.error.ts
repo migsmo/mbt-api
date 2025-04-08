@@ -1,6 +1,7 @@
-export class SupabaseInitializationError extends Error {
+import { BaseError } from './base-error';
+
+export class SupabaseInitializationError extends BaseError {
   constructor(error: string) {
-    super('Failed to initialize a supabase client.' + error);
-    this.name = 'SupabaseInitializationError';
+    super('Initialization error' + error);
   }
 }

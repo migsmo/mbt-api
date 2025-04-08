@@ -1,7 +1,7 @@
 import { Inject, Injectable } from '@nestjs/common';
 import { AuthProvider } from './abstracts/auth.provider.abstract';
-import { SignInResponse } from './interfaces/sign-in-response.class';
-import { SignUpResponse } from './interfaces/sign-up-response.class';
+import { SignInResponse } from './dto/sign-in-response.dto';
+import { SignUpResponse } from './dto/sign-up-response.dto';
 
 @Injectable()
 export class AuthService {
@@ -16,7 +16,7 @@ export class AuthService {
   async signIn(
     email: string,
     password: string,
-  ): Promise<{ response: SignInResponse; accessToken: string }> {
-    return this.authProvider.signIn(email, password);
+  ): Promise<{ response: SignInResponse; refreshToken: string }> {
+    return await this.authProvider.signIn(email, password);
   }
 }
