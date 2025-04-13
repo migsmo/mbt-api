@@ -3,6 +3,4 @@ export class CreateServiceRequest {
   price: number;
   commissionRate: number;
   description: string;
-  accessToken: string;
-  refreshToken: string;
 }
