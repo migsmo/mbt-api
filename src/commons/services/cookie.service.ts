@@ -14,10 +14,10 @@ export class CookieService {
       maxAge: 3600000, // default: 1 hour
     };
 
-    res.cookie('access_token', token, cookieOptions);
+    res.cookie('refresh_token', token, cookieOptions);
   }
 
   clearAuthCookie(res: Response): void {
-    res.clearCookie('access_token');
+    res.clearCookie('refresh_token');
   }
 }
