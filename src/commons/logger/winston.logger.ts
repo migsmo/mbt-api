@@ -6,8 +6,6 @@ const { combine, timestamp, printf, colorize, errors } = format;
 
 const dateStr = new Date().toISOString().split('T')[0];
 
-console.log();
-
 interface LogInfo extends TransformableInfo {
   stack?: string;
   message: string;
@@ -15,7 +13,7 @@ interface LogInfo extends TransformableInfo {
 }
 
 const logFormat = printf(({ message, timestamp, stack }: LogInfo) => {
-  return `[${timestamp}]: ${stack || message}`;
+  return `[${timestamp}]: ${message || ''}.\n ${stack}`;
 });
 export const winstonLogger = createLogger({
   level: 'info',

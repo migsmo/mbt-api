@@ -7,5 +7,6 @@ export class BaseError extends HttpException {
     statusCode: number = HttpStatus.INTERNAL_SERVER_ERROR,
   ) {
     super(clientMessage, statusCode);
+    this.internalMessage = internalMessage || clientMessage;
   }
 }
