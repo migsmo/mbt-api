@@ -3,6 +3,7 @@ export const routes = {
     root: '/auth',
     signup: '/signup',
     signin: '/signin',
+    refresh: '/refresh',
   },
   user: {
     getUser: '/user/:id',
