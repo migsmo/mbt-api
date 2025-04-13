@@ -1,4 +1,5 @@
 import { Inject, Injectable } from '@nestjs/common';
+import { User } from '@supabase/supabase-js';
 import { AuthProvider } from './abstracts/auth.provider.abstract';
 import { SignInResponse } from './dto/sign-in-response.dto';
 import { SignUpResponse } from './dto/sign-up-response.dto';
@@ -18,5 +19,15 @@ export class AuthService {
     password: string,
   ): Promise<{ response: SignInResponse; refreshToken: string }> {
     return await this.authProvider.signIn(email, password);
+  }
+
+  async validateToken(token: string): Promise<{ user: User }> {
+    return await this.authProvider.validateToken(token);
+  }
+
+  async refreshToken(
+    refreshToken: string,
+  ): Promise<{ accessToken: string; refreshToken: string }> {
+    return await this.authProvider.refreshSession(refreshToken);
   }
 }

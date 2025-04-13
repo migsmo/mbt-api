@@ -4,8 +4,7 @@ import {
   Inject,
   Injectable,
 } from '@nestjs/common';
-import { SupabaseClient } from '@supabase/supabase-js';
-import { CookieService } from 'src/commons/services/cookie.service';
+import { SupabaseClient, User } from '@supabase/supabase-js';
 import { BaseError } from 'src/errors/base-error';
 import { AuthProvider } from '../abstracts/auth.provider.abstract';
 import { SignInResponse } from '../dto/sign-in-response.dto';
@@ -16,7 +15,6 @@ import { SUPABASE_CLIENT } from '../providers/supabase.provider';
 export class SupabaseAuthProvider implements AuthProvider {
   constructor(
     @Inject(SUPABASE_CLIENT) private readonly supabase: SupabaseClient,
-    private readonly cookieService: CookieService,
   ) {}
 
   async signUp(email: string, password: string): Promise<SignUpResponse> {
@@ -109,6 +107,39 @@ export class SupabaseAuthProvider implements AuthProvider {
     return {
       response,
       refreshToken: session.refresh_token,
+    };
+  }
+
+  async validateToken(token: string): Promise<{ user: User }> {
+    const { data, error } = await this.supabase.auth.getUser(token);
+
+    if (error) {
+      throw new BaseError(
+        'We encountered an issue while retrieving user data. Please try again later.',
+        error.message,
+      );
+    }
+
+    return data;
+  }
+
+  async refreshSession(
+    refreshToken: string,
+  ): Promise<{ accessToken: string; refreshToken: string }> {
+    const { data, error } = await this.supabase.auth.refreshSession({
+      refresh_token: refreshToken,
+    });
+
+    if (error || data.session === null) {
+      throw new BaseError(
+        'We encountered an issue while refreshing your session. Please try again later.',
+        error?.message,
+      );
+    }
+
+    return {
+      accessToken: data.session.access_token,
+      refreshToken: data.session.refresh_token,
     };
   }
 }

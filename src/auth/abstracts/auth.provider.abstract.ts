@@ -1,3 +1,4 @@
+import { User } from '@supabase/supabase-js';
 import { SignInResponse } from '../dto/sign-in-response.dto';
 import { SignUpResponse } from '../dto/sign-up-response.dto';
 
@@ -7,4 +8,8 @@ export abstract class AuthProvider {
     email: string,
     password: string,
   ): Promise<{ response: SignInResponse; refreshToken: string }>;
+  abstract validateToken(token: string): Promise<{ user: User }>;
+  abstract refreshSession(
+    refreshToken: string,
+  ): Promise<{ accessToken: string; refreshToken: string }>;
 }

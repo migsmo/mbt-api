@@ -1,10 +1,11 @@
-import { Body, Controller, Post, Res, UsePipes } from '@nestjs/common';
-import { Response } from 'express';
+import { Body, Controller, Post, Req, Res, UsePipes } from '@nestjs/common';
+import { Request, Response } from 'express';
 import { JoiValidationPipe } from 'src/commons/pipes/joi-validation.pipe';
 import { CookieService } from 'src/commons/services/cookie.service';
 import { routes } from 'src/config/routes';
 import { AuthService } from './auth.service';
 
+import { Public } from 'src/commons/decorators/public.decorator';
 import { SignInResponse } from './dto/sign-in-response.dto';
 import { SignUpResponse } from './dto/sign-up-response.dto';
 import { signInSchema } from './schemas/auth.schema';
@@ -17,6 +18,7 @@ export class AuthController {
     private readonly cookieService: CookieService,
   ) {}
 
+  @Public()
   @Post(routes.auth.signup)
   async signUp(
     @Body() body: { email: string; password: string },
@@ -25,6 +27,7 @@ export class AuthController {
     return response;
   }
 
+  @Public()
   @Post(routes.auth.signin)
   async signIn(
     @Body() body: { email: string; password: string },
@@ -35,7 +38,26 @@ export class AuthController {
       body.password,
     );
     this.cookieService.setAuthCookie(res, refreshToken);
-    console.log(refreshToken);
     return response;
+  }
+
+  @Public()
+  @Post(routes.auth.refresh)
+  async refreshToken(
+    @Req() request: Request,
+    @Res({ passthrough: true }) response: Response,
+  ) {
+    const refreshToken: string =
+      (request.cookies as Record<string, string>)['refresh_token'] || '';
+
+    if (!refreshToken) {
+      response.status(401).send('Unauthorized');
+      return;
+    }
+
+    const { accessToken, refreshToken: newRefreshToken } =
+      await this.authService.refreshToken(refreshToken);
+    this.cookieService.setAuthCookie(response, newRefreshToken);
+    response.json({ accessToken });
   }
 }
