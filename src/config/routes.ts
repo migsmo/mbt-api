@@ -5,14 +5,11 @@ export const routes = {
     signin: '/signin',
     refresh: '/refresh',
   },
-  user: {
-    getUser: '/user/:id',
-    updateUser: '/user/:id',
-  },
-  product: {
-    getProduct: '/product/:id',
-    createProduct: '/product/create',
-    updateProduct: '/product/update/:id',
+  service: {
+    root: '/service',
+    getService: '/single/:id',
+    getServices: '/all',
+    createService: '/create',
   },
   order: {
     getOrder: '/order/:id',
