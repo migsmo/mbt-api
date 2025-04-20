@@ -7,9 +7,11 @@ export const routes = {
   },
   service: {
     root: '/service',
-    getService: '/single/:id',
-    getServices: '/all',
-    createService: '/create',
+    get: '/single/:id',
+    getAll: '/all',
+    create: '/create',
+    delete: '/:id',
+    update: '/update',
   },
   order: {
     getOrder: '/order/:id',

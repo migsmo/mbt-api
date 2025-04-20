@@ -8,7 +8,7 @@ import { GetServicesService } from './get-services.service';
 export class GetServicesController {
   constructor(private readonly getServicesService: GetServicesService) {}
 
-  @Get(routes.service.getServices)
+  @Get(routes.service.getAll)
   async getServices(
     @Query() query: GetServicesRequest,
   ): Promise<GetServicesResponse> {

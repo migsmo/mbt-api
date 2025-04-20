@@ -6,13 +6,8 @@ import { GetServiceService } from './get-service.service';
 export class GetServiceController {
   constructor(private readonly getServiceService: GetServiceService) {}
 
-  @Get(routes.service.getService)
+  @Get(routes.service.get)
   async getServiceById(@Param('id') id: string) {
     return await this.getServiceService.getServiceById(id);
   }
 }
-
-
-auth setAuth({
-    access token 
-})

@@ -5,7 +5,7 @@ import { AppService } from './app.service';
 import { AuthModule } from './auth/auth.module';
 import { CommonModule } from './commons/common.module';
 import config from './config/config';
-import { CreateServiceModule } from './services/create-service/service.module';
+import { CreateServiceModule } from './services/service.module';
 
 @Module({
   imports: [
