@@ -1,7 +1,10 @@
 import { Inject, Injectable } from '@nestjs/common';
 import { SupabaseClient } from '@supabase/supabase-js';
 import { SUPABASE_REQUEST_CLIENT } from 'src/auth/providers/supabase-request.provider';
+import { BaseError } from 'src/errors/base-error';
+import { Service } from '../entity/service.entity';
 import { CreateServiceRequest } from './dto/create-service-request.dto';
+import { CreateServiceResponse } from './dto/create-service-response.dto';
 
 @Injectable()
 export class CreateServiceService {
@@ -10,20 +13,7 @@ export class CreateServiceService {
   ) {}
 
   async createService(data: CreateServiceRequest) {
-    const {
-      error,
-      data: responseData,
-    }: {
-      error: { message?: string } | null;
-      data: {
-        id: string;
-        name: string;
-        price: number;
-        commission_rate: number;
-        description: string;
-        created_at: string;
-      } | null;
-    } = await this.supabase
+    const service = await this.supabase
       .from('services')
       .insert({
         name: data.name,
@@ -35,10 +25,21 @@ export class CreateServiceService {
       .select()
       .single();
 
-    if (error) {
-      throw new Error(`Failed to create service: ${error.message}`);
+    const serviceData = service.data as Service;
+
+    if (service.error) {
+      throw new BaseError(`Failed to create service: ${service.error.message}`);
     }
 
-    return responseData;
+    const response: CreateServiceResponse = {
+      id: serviceData.id,
+      createdAt: new Date(serviceData.created_at),
+      name: serviceData.name,
+      price: serviceData.price,
+      commissionRate: serviceData.commission_rate,
+      description: serviceData.description,
+    };
+
+    return response;
   }
 }

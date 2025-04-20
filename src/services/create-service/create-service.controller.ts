@@ -8,7 +8,7 @@ import { CreateServiceRequest } from './dto/create-service-request.dto';
 export class CreateServiceController {
   constructor(private readonly createServiceService: CreateServiceService) {}
 
-  @Post(routes.service.createService)
+  @Post(routes.service.create)
   async create(@Body() createServiceDto: CreateServiceRequest) {
     return await this.createServiceService.createService(createServiceDto);
   }
