@@ -31,4 +31,4 @@ import { UpdateServiceService } from './update-service/update-service.service';
     UpdateServiceService,
   ],
 })
-export class CreateServiceModule {}
+export class ServicesModule {}
