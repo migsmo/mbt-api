@@ -14,6 +14,7 @@ export class GetAvailableDaySlotSService {
     day: string,
   ): Promise<GetAvailableDaySlotSResponse> {
     const requestedDay = new Date(day);
+    requestedDay.setHours(0, 0, 0, 0);
 
     console.log('requestedDay', requestedDay);
 
@@ -22,15 +23,19 @@ export class GetAvailableDaySlotSService {
     }
 
     const now = new Date();
+    now.setHours(0, 0, 0, 0);
+
+    console.log('now', now);
+
     const maxDate = new Date();
-    const isLessThanToday =
-      requestedDay.getFullYear() < now.getFullYear() ||
-      requestedDay.getMonth() < now.getMonth() ||
-      requestedDay.getDate() < now.getDate();
-
     maxDate.setMonth(maxDate.getMonth() + 3);
+    maxDate.setHours(0, 0, 0, 0);
 
-    if (isLessThanToday || requestedDay > maxDate) {
+    console.log('maxDate', maxDate);
+
+    console.log(maxDate);
+
+    if (requestedDay < now || requestedDay > maxDate) {
       throw new BaseError('Date must be within the next 3 months.');
     }
 
