@@ -5,4 +5,5 @@ export class GetServiceResponse {
   price: number;
   commissionRate: number;
   description: string;
+  durationInMinutes: number;
 }
