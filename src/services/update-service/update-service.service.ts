@@ -41,6 +41,7 @@ export class UpdateServiceService {
       price: serviceData.price,
       commissionRate: serviceData.commission_rate,
       description: serviceData.description,
+      durationInMinutes: serviceData.duration_in_minutes,
     };
 
     return response;

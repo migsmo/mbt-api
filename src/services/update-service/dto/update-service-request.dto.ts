@@ -4,4 +4,5 @@ export class UpdateServiceRequest {
   price: number;
   commissionRate: number;
   description: string;
+  durationInMinutes: number;
 }
