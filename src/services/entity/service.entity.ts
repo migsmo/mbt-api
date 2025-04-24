@@ -5,4 +5,5 @@ export class Service {
   commission_rate: number;
   description: string;
   created_at: string;
+  duration_in_minutes: number;
 }
