@@ -6,12 +6,13 @@ import { GlobalErrorLoggerService } from './commons/logger/global-error-logger.s
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
-  // Needed for setting httpOnly cookies in auth APIs
   app.use(cookieParser());
   const loggerService = app.get(GlobalErrorLoggerService);
   app.useGlobalFilters(new GlobalExceptionFilter(loggerService));
+
   app.enableCors({
     origin: 'http://localhost:3000',
+    credentials: true,
   });
 
   await app.listen(process.env.PORT ?? 3000);
