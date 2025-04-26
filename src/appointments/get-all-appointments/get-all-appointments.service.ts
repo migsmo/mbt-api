@@ -3,7 +3,7 @@ import { SupabaseClient } from '@supabase/supabase-js';
 import { SUPABASE_REQUEST_CLIENT } from 'src/auth/providers/supabase-request.provider';
 import { Appointments } from 'src/entity/appointments.entity';
 import { BaseError } from 'src/errors/base-error';
-import { GetAppointmentResponse } from '../get-appointment/get-appointment-response.dto';
+import { GetAppointmentResponse } from '../get-appointment/dto/get-appointment-response.dto';
 import { GetAllAppointmentsResponse } from './dto/get-all-appointments-response.dto';
 import { GetAllAppointmentsRequest } from './dto/get-all-appointments.request.dto';
 

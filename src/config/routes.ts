@@ -18,5 +18,6 @@ export const routes = {
     create: '/create',
     getAvailableSlotsByDay: '/available-slots/:day',
     getAll: '/all',
+    get: '/single/:id',
   },
 };

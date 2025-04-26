@@ -1,4 +1,4 @@
-import { GetAppointmentResponse } from 'src/appointments/get-appointment/get-appointment-response.dto';
+import { GetAppointmentResponse } from 'src/appointments/get-appointment/dto/get-appointment-response.dto';
 
 export interface GetAllAppointmentsResponse {
   appointments: GetAppointmentResponse[];
