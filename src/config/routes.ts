@@ -17,5 +17,6 @@ export const routes = {
     root: '/appointments',
     create: '/create',
     getAvailableSlotsByDay: '/available-slots/:day',
+    getAll: '/all',
   },
 };

@@ -2,7 +2,7 @@ import { Inject, Injectable } from '@nestjs/common';
 import { SupabaseClient } from '@supabase/supabase-js';
 import { PaginationMeta } from 'src/commons/dto/pagination-meta.dto';
 import { BaseError } from 'src/errors/base-error';
-import { Service } from '../entity/service.entity';
+import { Service } from '../../entity/service.entity';
 import { GetServiceResponse } from '../get-service/dto/get-service-response.dto';
 import { GetServicesRequest } from './dto/get-services-request.dto';
 import { GetServicesResponse } from './dto/get-services-response.dto';

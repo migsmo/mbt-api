@@ -1,4 +1,4 @@
-export class Appointment {
+export class Appointments {
   id: string;
   created_at: string;
   date_time: string;

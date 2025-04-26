@@ -2,7 +2,7 @@ import { Inject, Injectable } from '@nestjs/common';
 import { SupabaseClient } from '@supabase/supabase-js';
 import { SUPABASE_REQUEST_CLIENT } from 'src/auth/providers/supabase-request.provider';
 import { BaseError } from 'src/errors/base-error';
-import { Service } from '../entity/service.entity';
+import { Service } from '../../entity/service.entity';
 import { CreateServiceRequest } from './dto/create-service-request.dto';
 import { CreateServiceResponse } from './dto/create-service-response.dto';
 
