@@ -13,9 +13,9 @@ export const routes = {
     delete: '/:id',
     update: '/update',
   },
-  order: {
-    getOrder: '/order/:id',
-    createOrder: '/order/create',
-    updateOrder: '/order/update/:id',
+  appointments: {
+    root: '/appointments',
+    create: '/create',
+    getAvailableSlotsByDay: '/available-slots/:day',
   },
 };
