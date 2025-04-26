@@ -9,15 +9,15 @@ export class CookieService {
   setAuthCookie(res: Response, token: string): void {
     const cookieOptions = {
       httpOnly: true,
-      secure: this.configService.get('NODE_ENV') === 'production',
-      sameSite: 'none' as const,
-      maxAge: 3600000, // default: 1 hour
+      secure: false,
+      sameSite: 'lax' as const,
+      maxAge: 3600000,
     };
 
-    res.cookie('refresh_token', token, cookieOptions);
+    res.cookie('refreshToken', token, cookieOptions);
   }
 
   clearAuthCookie(res: Response): void {
-    res.clearCookie('refresh_token');
+    res.clearCookie('refreshToken');
   }
 }
