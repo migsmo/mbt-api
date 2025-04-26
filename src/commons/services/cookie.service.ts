@@ -9,9 +9,9 @@ export class CookieService {
   setAuthCookie(res: Response, token: string): void {
     const cookieOptions = {
       httpOnly: true,
-      secure: this.configService.get('NODE_ENV') === 'production',
-      sameSite: 'none' as const,
-      maxAge: 3600000, // default: 1 hour
+      secure: false,
+      sameSite: 'lax' as const,
+      maxAge: 3600000,
     };
 
     res.cookie('refreshToken', token, cookieOptions);
