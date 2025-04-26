@@ -74,7 +74,7 @@ export class GetAllCustomersService {
       lastName: customerData.last_name,
       email: customerData.email,
       address: customerData.address,
-      contactNumber: customerData.contact_number,
+      contactNumber: customerData.contact_no,
       occupation: customerData.occupation,
       additionalRemarks: customerData.additional_remarks,
     };

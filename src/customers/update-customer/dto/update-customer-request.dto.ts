@@ -1,6 +1,5 @@
-export class GetCustomerResponse {
+export class UpdateCustomerRequest {
   id: string;
-  createdAt: Date;
   firstName: string;
   lastName: string;
   address: string;

@@ -1,4 +1,4 @@
-export class GetCustomerResponse {
+export class UpdateCustomerResponse {
   id: string;
   createdAt: Date;
   firstName: string;
