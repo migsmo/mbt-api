@@ -30,9 +30,11 @@ export const SupabaseRequestProvider: Provider = {
       if (authHeader && authHeader.startsWith('Bearer ')) {
         const accessToken = authHeader.split(' ')[1];
 
+        console.log(accessToken, request.cookies['refreshToken']);
+
         await client.auth.setSession({
           access_token: accessToken,
-          refresh_token: (request.cookies['refresh_token'] as string) || '',
+          refresh_token: (request.cookies['refreshToken'] as string) || '',
         });
       }
     } catch (error: any) {

@@ -72,6 +72,7 @@ export class GetServicesService {
       price: serviceData.price,
       commissionRate: serviceData.commission_rate,
       description: serviceData.description,
+      durationInMinutes: serviceData.duration_in_minutes,
     };
   }
 }

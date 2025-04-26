@@ -3,4 +3,5 @@ export class CreateServiceRequest {
   price: number;
   commissionRate: number;
   description: string;
+  durationInMinutes: number;
 }

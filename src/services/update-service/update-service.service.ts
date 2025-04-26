@@ -18,6 +18,7 @@ export class UpdateServiceService {
       price: request.price,
       commission_rate: request.commissionRate,
       description: request.description,
+      duration_in_minutes: request.durationInMinutes,
     };
 
     console.log(request);
@@ -41,6 +42,7 @@ export class UpdateServiceService {
       price: serviceData.price,
       commissionRate: serviceData.commission_rate,
       description: serviceData.description,
+      durationInMinutes: serviceData.duration_in_minutes,
     };
 
     return response;
