@@ -1,0 +1,78 @@
+import { Inject, Injectable } from '@nestjs/common';
+import { SupabaseClient } from '@supabase/supabase-js';
+import { PaginationMeta } from 'src/commons/dto/pagination-meta.dto';
+import { Employees } from 'src/entity/employees.entity';
+import { BaseError } from 'src/errors/base-error';
+import { GetEmployeeResponse } from '../get-employee/dto/get-empoyee-response.dto';
+import { GetAllEmployeesRequest } from './dto/get-all-employees-request.dto';
+import { GetAllEmployeesResponse } from './dto/get-all-employees-response.dto';
+
+@Injectable()
+export class GetAllEmployeesService {
+  constructor(
+    @Inject('SUPABASE_REQUEST_CLIENT')
+    private readonly supabase: SupabaseClient,
+  ) {}
+
+  async getAllEmployees(
+    params: GetAllEmployeesRequest,
+  ): Promise<GetAllEmployeesResponse> {
+    const { page, limit, sortBy, sortDirection } = params;
+
+    // Calculate pagination parameters
+    const from = (page - 1) * limit;
+    const to = from + limit - 1;
+
+    // Get total count first (for pagination metadata)
+    const { count, error: countError } = await this.supabase
+      .from('employees')
+      .select('*', { count: 'exact', head: true });
+
+    if (countError) {
+      throw new BaseError(`Failed to count employees: ${countError.message}`);
+    }
+
+    // Get paginated data
+    const { data, error } = await this.supabase
+      .from('employees')
+      .select('*')
+      .order(sortBy, { ascending: sortDirection === 'asc' })
+      .range(from, to);
+
+    // Map the service data to the response format
+    const employees = (data as Employees[]).map((employeesData) =>
+      this.mapEmployeeData(employeesData),
+    );
+
+    if (error) {
+      throw new BaseError(`Failed to get services: ${error.message}`);
+    }
+
+    // Calculate pagination metadata
+    const totalItems = count || 0;
+    const totalPages = Math.ceil(totalItems / limit);
+
+    const meta: PaginationMeta = {
+      currentPage: page,
+      itemsPerPage: limit,
+      totalItems,
+      totalPages,
+      hasNextPage: page < totalPages,
+      hasPreviousPage: page > 1,
+    };
+
+    return {
+      employees,
+      meta,
+    };
+  }
+
+  private mapEmployeeData(employeeData: Employees): GetEmployeeResponse {
+    return {
+      id: employeeData.id,
+      createdAt: new Date(employeeData.created_at),
+      firstName: employeeData.first_name,
+      lastName: employeeData.last_name,
+    };
+  }
+}

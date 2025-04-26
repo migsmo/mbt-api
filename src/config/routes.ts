@@ -13,6 +13,14 @@ export const routes = {
     delete: '/:id',
     update: '/update',
   },
+  employees: {
+    root: '/employees',
+    getAll: '/all',
+    get: '/single/:id',
+    create: '/create',
+    delete: '/:id',
+    update: '/update',
+  },
   appointments: {
     root: '/appointments',
     create: '/create',
