@@ -1,5 +1,5 @@
 export class GetCustomerResponse {
-  id: number;
+  id: string;
   createdAt: Date;
   firstName: string;
   lastName: string;

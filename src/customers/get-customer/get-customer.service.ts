@@ -30,7 +30,7 @@ export class GetCustomerService {
       firstName: customerData.first_name,
       lastName: customerData.last_name,
       address: customerData.address,
-      contactNumber: customerData.contact_number,
+      contactNumber: customerData.contact_no,
       email: customerData.email,
       occupation: customerData.occupation,
       additionalRemarks: customerData.additional_remarks,
