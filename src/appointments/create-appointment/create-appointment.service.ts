@@ -1,8 +1,8 @@
 import { Inject, Injectable } from '@nestjs/common';
 import { SupabaseClient } from '@supabase/supabase-js';
 import { SUPABASE_REQUEST_CLIENT } from 'src/auth/providers/supabase-request.provider';
+import { Appointment } from 'src/entity/appointments.entity';
 import { BaseError } from 'src/errors/base-error';
-import { Appointment } from 'src/services/entity/appointments.entity';
 import { CreateAppointmentRequest } from './dto/create-appointment-request.dto';
 import { CreateAppointmentResponse } from './dto/create-appointment-response.dto';
 

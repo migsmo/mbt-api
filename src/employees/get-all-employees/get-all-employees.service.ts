@@ -1,20 +1,22 @@
 import { Inject, Injectable } from '@nestjs/common';
 import { SupabaseClient } from '@supabase/supabase-js';
 import { PaginationMeta } from 'src/commons/dto/pagination-meta.dto';
+import { Employees } from 'src/entity/employees.entity';
 import { BaseError } from 'src/errors/base-error';
-import { Service } from '../../entity/service.entity';
-import { GetServiceResponse } from '../get-service/dto/get-service-response.dto';
-import { GetServicesRequest } from './dto/get-services-request.dto';
-import { GetServicesResponse } from './dto/get-services-response.dto';
+import { GetEmployeeResponse } from '../get-employee/dto/get-empoyee-response.dto';
+import { GetAllEmployeesRequest } from './dto/get-all-employees-request.dto';
+import { GetAllEmployeesResponse } from './dto/get-all-employees-response.dto';
 
 @Injectable()
-export class GetServicesService {
+export class GetAllEmployeesService {
   constructor(
     @Inject('SUPABASE_REQUEST_CLIENT')
     private readonly supabase: SupabaseClient,
   ) {}
-  // New method for paginated service retrieval
-  async getServices(params: GetServicesRequest): Promise<GetServicesResponse> {
+
+  async getAllEmployees(
+    params: GetAllEmployeesRequest,
+  ): Promise<GetAllEmployeesResponse> {
     const { page, limit, sortBy, sortDirection } = params;
 
     // Calculate pagination parameters
@@ -23,28 +25,28 @@ export class GetServicesService {
 
     // Get total count first (for pagination metadata)
     const { count, error: countError } = await this.supabase
-      .from('services')
+      .from('employees')
       .select('*', { count: 'exact', head: true });
 
     if (countError) {
-      throw new BaseError(`Failed to count services: ${countError.message}`);
+      throw new BaseError(`Failed to count employees: ${countError.message}`);
     }
 
     // Get paginated data
     const { data, error } = await this.supabase
-      .from('services')
+      .from('employees')
       .select('*')
       .order(sortBy, { ascending: sortDirection === 'asc' })
       .range(from, to);
 
+    // Map the service data to the response format
+    const employees = (data as Employees[]).map((employeesData) =>
+      this.mapEmployeeData(employeesData),
+    );
+
     if (error) {
       throw new BaseError(`Failed to get services: ${error.message}`);
     }
-
-    // Map the service data to the response format
-    const services = (data as Service[]).map((serviceData) =>
-      this.mapServiceData(serviceData),
-    );
 
     // Calculate pagination metadata
     const totalItems = count || 0;
@@ -60,19 +62,17 @@ export class GetServicesService {
     };
 
     return {
-      services,
+      employees,
       meta,
     };
   }
-  private mapServiceData(serviceData: Service): GetServiceResponse {
+
+  private mapEmployeeData(employeeData: Employees): GetEmployeeResponse {
     return {
-      id: serviceData.id,
-      createdAt: new Date(serviceData.created_at),
-      name: serviceData.name,
-      price: serviceData.price,
-      commissionRate: serviceData.commission_rate,
-      description: serviceData.description,
-      durationInMinutes: serviceData.duration_in_minutes,
+      id: employeeData.id,
+      createdAt: new Date(employeeData.created_at),
+      firstName: employeeData.first_name,
+      lastName: employeeData.last_name,
     };
   }
 }

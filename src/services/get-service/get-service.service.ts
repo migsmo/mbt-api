@@ -1,7 +1,7 @@
 import { Inject, Injectable } from '@nestjs/common';
 import { SupabaseClient } from '@supabase/supabase-js';
 import { BaseError } from 'src/errors/base-error';
-import { Service } from '../entity/service.entity';
+import { Service } from '../../entity/service.entity';
 import { GetServiceResponse } from '../get-service/dto/get-service-response.dto';
 
 @Injectable()

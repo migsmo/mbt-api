@@ -6,6 +6,7 @@ import { AppointmentsModule } from './appointments/appointments.module';
 import { AuthModule } from './auth/auth.module';
 import { CommonModule } from './commons/common.module';
 import config from './config/config';
+import { EmployeesModule } from './employees/employees.module';
 import { ServicesModule } from './services/service.module';
 
 @Module({
@@ -18,6 +19,7 @@ import { ServicesModule } from './services/service.module';
     CommonModule,
     ServicesModule,
     AppointmentsModule,
+    EmployeesModule,
   ],
   controllers: [AppController],
   providers: [AppService],
