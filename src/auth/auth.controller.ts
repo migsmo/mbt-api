@@ -1,4 +1,12 @@
-import { Body, Controller, Post, Req, Res, UsePipes } from '@nestjs/common';
+import {
+  Body,
+  Controller,
+  Get,
+  Post,
+  Req,
+  Res,
+  UsePipes,
+} from '@nestjs/common';
 import { Request, Response } from 'express';
 import { JoiValidationPipe } from 'src/commons/pipes/joi-validation.pipe';
 import { CookieService } from 'src/commons/services/cookie.service';
@@ -42,13 +50,13 @@ export class AuthController {
   }
 
   @Public()
-  @Post(routes.auth.refresh)
+  @Get(routes.auth.refresh)
   async refreshToken(
     @Req() request: Request,
     @Res({ passthrough: true }) response: Response,
   ) {
     const refreshToken: string =
-      (request.cookies as Record<string, string>)['refresh_token'] || '';
+      (request.cookies as Record<string, string>)['refreshToken'] || '';
 
     if (!refreshToken) {
       response.status(401).send('Unauthorized');
