@@ -19,4 +19,12 @@ export const routes = {
     getAvailableSlotsByDay: '/available-slots/:day',
     getAll: '/all',
   },
+  customers: {
+    root: '/customers',
+    get: '/single/:id',
+    getAll: '/all',
+    create: '/create',
+    delete: '/:id',
+    update: '/update',
+  },
 };
