@@ -28,6 +28,7 @@ export class GetAppointmentService {
       );
     }
 
+
     const appointmentService = await this.supabase
       .from('appointment_services')
       .select('*')
@@ -52,7 +53,7 @@ export class GetAppointmentService {
       customerAssigned: appointmentData.customer_assigned,
       isCompleted: appointmentData.is_completed,
     };
-
+    
     return response;
   }
 }
