@@ -24,7 +24,6 @@ export class CreateAppointmentService {
       throw new BaseError('Invalid day format.');
     }
 
-    console.log(appointmentTime);
     // Time and date constraints
     if (appointmentTime < now || appointmentTime > maxDate) {
       throw new BaseError('Appointment must be within 3 months from today.');
@@ -50,16 +49,14 @@ export class CreateAppointmentService {
       throw new BaseError('This time slot is fully booked.');
     }
 
-    console.log();
-
-    // Insert appointment
+    // Insert the appointment
     const appointment = await this.supabase
       .from('appointments')
       .insert([
         {
           date_time: appointmentTime.toISOString(),
           customer_assigned: request.customerId,
-          selected_services: request.selectedServices,
+          selected_services: request.selectedServices, // Optional: keep for summary
           additional_remarks: request.additionalRemarks ?? '',
           created_at: new Date().toISOString(),
         },
@@ -67,17 +64,26 @@ export class CreateAppointmentService {
       .select()
       .single();
 
-    console.log({
-      date_time: appointmentTime.toISOString(),
-      customer_assigned: request.customerId,
-      selected_services: request.selectedServices,
-      additional_remarks: request.additionalRemarks ?? '',
-      created_at: new Date().toISOString(),
-    });
-
     if (appointment.error) throw new BaseError(appointment.error.message);
 
     const appointmentData = appointment.data as Appointments;
+
+    // Insert into appointment_services table for each selected service
+    const appointmentServicesToInsert = request.selectedServices.map(
+      (serviceId) => ({
+        appointment_id: appointmentData.id,
+        service_id: serviceId,
+        employee_ids: [], // Initially empty
+      }),
+    );
+
+    const { error: appointmentServicesError } = await this.supabase
+      .from('appointment_services')
+      .insert(appointmentServicesToInsert);
+
+    if (appointmentServicesError) {
+      throw new BaseError(appointmentServicesError.message);
+    }
 
     const response: CreateAppointmentResponse = {
       appointmentId: appointmentData.id,
