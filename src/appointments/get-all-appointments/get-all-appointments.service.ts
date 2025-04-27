@@ -2,6 +2,7 @@ import { Inject, Injectable } from '@nestjs/common';
 import { SupabaseClient } from '@supabase/supabase-js';
 import { SUPABASE_REQUEST_CLIENT } from 'src/auth/providers/supabase-request.provider';
 import { Appointments } from 'src/entity/appointments.entity';
+import { AppointmentServices } from 'src/entity/appointmentService.entity';
 import { BaseError } from 'src/errors/base-error';
 import { GetAppointmentResponse } from '../get-appointment/dto/get-appointment-response.dto';
 import { GetAllAppointmentsResponse } from './dto/get-all-appointments-response.dto';
@@ -45,8 +46,10 @@ export class GetAllAppointmentsService {
       .gte('date_time', formattedStartDate.toISOString())
       .lte('date_time', formattedEndDate.toISOString());
 
-    const appointmentResponse = appointments.map((appointmentData) =>
-      this.mapAppointmentData(appointmentData),
+    const appointmentResponse = await Promise.all(
+      appointments.map((appointmentData: Appointments) =>
+        this.mapAppointmentData(appointmentData),
+      ),
     );
 
     return {
@@ -55,15 +58,30 @@ export class GetAllAppointmentsService {
     };
   }
 
-  private mapAppointmentData(
+  private async mapAppointmentData(
     appointment: Appointments,
-  ): GetAppointmentResponse {
+  ): Promise<GetAppointmentResponse> {
+    const appointmentService = await this.supabase
+      .from('appointment_services')
+      .select('*')
+      .eq('appointment_id', appointment.id);
+
+    const appointmentServiceData =
+      appointmentService.data as AppointmentServices[];
+
+    const selectedServices = appointmentServiceData.map((service) => {
+      return {
+        serviceId: service.service_id,
+        staffIds: service.employee_ids,
+      };
+    });
+
     return {
       id: appointment.id,
       createdAt: new Date(appointment.created_at),
       dateTime: new Date(appointment.date_time),
       additionalRemarks: appointment.additional_remarks,
-      selectedServices: appointment.selected_services,
+      selectedServices: selectedServices,
       customerAssigned: appointment.customer_assigned,
     };
   }
