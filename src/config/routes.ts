@@ -28,6 +28,7 @@ export const routes = {
     getAll: '/all',
     get: '/single/:id',
     assignStaff: '/assign-staff',
+    updateStatus: '/update-status',
   },
   customers: {
     root: '/customers',

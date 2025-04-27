@@ -11,6 +11,8 @@ import { GetAppointmentController } from './get-appointment/get-appointment.cont
 import { GetAppointmentService } from './get-appointment/get-appointment.service';
 import { GetAvailableDaySlotsController } from './get-available-day-slot/get-available-day-slots.controller';
 import { GetAvailableDaySlotSService } from './get-available-day-slot/get-available-day-slots.service';
+import { UpdateAppointmentStatusController } from './update-appointment-status/update-appointment-status.controller';
+import { UpdateAppointmentStatusService } from './update-appointment-status/update-appointment-status.service';
 
 @Module({
   controllers: [
@@ -19,6 +21,7 @@ import { GetAvailableDaySlotSService } from './get-available-day-slot/get-availa
     GetAllAppointmentsController,
     GetAppointmentController,
     AssignStaffAppointmentsController,
+    UpdateAppointmentStatusController,
   ],
   providers: [
     SupabaseRequestProvider,
@@ -27,6 +30,7 @@ import { GetAvailableDaySlotSService } from './get-available-day-slot/get-availa
     GetAllAppointmentsService,
     GetAppointmentService,
     AssignStaffAppointmentsService,
+    UpdateAppointmentStatusService,
   ],
 })
 export class AppointmentsModule {}
