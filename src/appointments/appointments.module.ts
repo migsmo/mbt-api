@@ -1,6 +1,8 @@
 // src/services/create-service.module.ts
 import { Module } from '@nestjs/common';
 import { SupabaseRequestProvider } from 'src/auth/providers/supabase-request.provider';
+import { AssignStaffAppointmentsController } from './assign-staff-appointments/assign-staff-appointments.controller';
+import { AssignStaffAppointmentsService } from './assign-staff-appointments/assign-staff-appointments.service';
 import { CreateAppointmentController } from './create-appointment/create-appointment.controller';
 import { CreateAppointmentService } from './create-appointment/create-appointment.service';
 import { GetAllAppointmentsController } from './get-all-appointments/get-all-appointments.controller';
@@ -16,6 +18,7 @@ import { GetAvailableDaySlotSService } from './get-available-day-slot/get-availa
     GetAvailableDaySlotsController,
     GetAllAppointmentsController,
     GetAppointmentController,
+    AssignStaffAppointmentsController,
   ],
   providers: [
     SupabaseRequestProvider,
@@ -23,6 +26,7 @@ import { GetAvailableDaySlotSService } from './get-available-day-slot/get-availa
     GetAvailableDaySlotSService,
     GetAllAppointmentsService,
     GetAppointmentService,
+    AssignStaffAppointmentsService,
   ],
 })
 export class AppointmentsModule {}
