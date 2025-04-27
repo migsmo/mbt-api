@@ -8,4 +8,5 @@ export class GetAppointmentResponse {
     staffIds: string[];
   }[];
   customerAssigned: string;
+  isCompleted: boolean;
 }

@@ -5,4 +5,5 @@ export class Appointments {
   additional_remarks: string;
   selected_services: string[];
   customer_assigned: string;
+  is_completed: boolean;
 }

@@ -50,6 +50,7 @@ export class GetAppointmentService {
       additionalRemarks: appointmentData.additional_remarks,
       selectedServices: selectedServices,
       customerAssigned: appointmentData.customer_assigned,
+      isCompleted: appointmentData.is_completed,
     };
 
     return response;

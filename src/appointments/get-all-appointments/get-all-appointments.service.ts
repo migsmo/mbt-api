@@ -83,6 +83,7 @@ export class GetAllAppointmentsService {
       additionalRemarks: appointment.additional_remarks,
       selectedServices: selectedServices,
       customerAssigned: appointment.customer_assigned,
+      isCompleted: appointment.is_completed,
     };
   }
 }
