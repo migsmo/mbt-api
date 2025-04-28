@@ -44,30 +44,25 @@ export class AssignStaffAppointmentsService {
       .from('appointment_services')
       .select('*')
       .eq('appointment_id', appointmentId)
-      .eq('service_id', request.serviceId);
+      .eq('service_id', request.serviceId)
+      .single();
 
     const appointmentServiceData =
-      appointmentService.data as AppointmentServices[];
+      appointmentService.data as AppointmentServices;
 
-    if (appointmentService.error || appointmentServiceData.length !== 1) {
+    if (appointmentService.error || !appointmentServiceData) {
       throw new BaseError(
         'Failed to find appointment services',
         appointmentService.error?.message,
       );
     }
 
-    if (appointmentServiceData[0].employee_ids.includes(staffIds[0])) {
-      throw new BaseError(
-        'Staff member already assigned to this appointment service',
-      );
-    }
-
     const updatedAppointmentService = await this.supabase
       .from('appointment_services')
       .update({
-        employee_ids: [...appointmentServiceData[0].employee_ids, ...staffIds],
+        employee_ids: staffIds,
       })
-      .eq('id', appointmentServiceData[0].id)
+      .eq('id', appointmentServiceData.id)
       .select()
       .single();
 
