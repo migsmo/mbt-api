@@ -3,4 +3,6 @@ export class Employees {
   created_at: string;
   first_name: string;
   last_name: string;
+  contact_no?: string;
+  email?: string;
 }
