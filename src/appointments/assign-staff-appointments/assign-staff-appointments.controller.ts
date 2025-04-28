@@ -1,4 +1,4 @@
-import { Body, Controller, Post } from '@nestjs/common';
+import { Body, Controller, Put } from '@nestjs/common';
 import { routes } from 'src/config/routes';
 import { AssignStaffAppointmentsService } from './assign-staff-appointments.service';
 import { AssignStaffAppointmentsRequestDto } from './dto/assign-staff-appointments-request.dto';
@@ -9,7 +9,7 @@ export class AssignStaffAppointmentsController {
     private readonly assignStaffAppointmentsService: AssignStaffAppointmentsService,
   ) {}
 
-  @Post(routes.appointments.assignStaff)
+  @Put(routes.appointments.assignStaff)
   async assignStaffToAppointment(
     @Body() request: AssignStaffAppointmentsRequestDto,
   ) {
