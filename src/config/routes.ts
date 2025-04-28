@@ -26,6 +26,7 @@ export const routes = {
     create: '/create',
     getAvailableSlotsByDay: '/available-slots/:day',
     getAll: '/all',
+    getAllByCustomer: '/all/:customerId',
     get: '/single/:id',
     assignStaff: '/assign-staff',
     updateStatus: '/update-status',
