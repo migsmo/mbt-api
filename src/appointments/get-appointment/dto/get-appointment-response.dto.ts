@@ -3,6 +3,10 @@ export class GetAppointmentResponse {
   createdAt: Date;
   dateTime: Date;
   additionalRemarks: string;
-  selectedServices: string[];
+  selectedServices: {
+    serviceId: string;
+    staffIds: string[];
+  }[];
   customerAssigned: string;
+  isCompleted: boolean;
 }
