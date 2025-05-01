@@ -3,4 +3,6 @@ export class GetEmployeeResponse {
   createdAt: Date;
   firstName: string;
   lastName: string;
+  contactNumber?: string;
+  email?: string;
 }

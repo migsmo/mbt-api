@@ -17,7 +17,7 @@ export class GetAllEmployeesService {
   async getAllEmployees(
     params: GetAllEmployeesRequest,
   ): Promise<GetAllEmployeesResponse> {
-    const { page, limit, sortBy, sortDirection } = params;
+    const { page, limit, sortBy, sortDirection, search } = params;
 
     // Calculate pagination parameters
     const from = (page - 1) * limit;
@@ -32,10 +32,13 @@ export class GetAllEmployeesService {
       throw new BaseError(`Failed to count employees: ${countError.message}`);
     }
 
-    // Get paginated data
-    const { data, error } = await this.supabase
-      .from('employees')
-      .select('*')
+    const query = this.supabase.from('employees').select('*');
+
+    if (search) {
+      query.ilike('full_name', `%${search}%`);
+    }
+
+    const { data, error } = await query
       .order(sortBy, { ascending: sortDirection === 'asc' })
       .range(from, to);
 
