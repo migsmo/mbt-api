@@ -4,6 +4,8 @@ import { SUPABASE_REQUEST_CLIENT } from 'src/auth/providers/supabase-request.pro
 import { Employees } from 'src/entity/employees.entity';
 import { EmployeesHelper } from 'src/helpers/employees.helpers';
 import { GetEmployeeResponse } from './dto/get-empoyee-response.dto';
+import { GetEmployeeResponse } from './dto/get-empoyee-response.dto';
+
 @Injectable()
 export class GetEmployeeService {
   constructor(
@@ -26,12 +28,14 @@ export class GetEmployeeService {
       throw new Error(employee.error.message);
     }
 
+
     const commission = await this.employeesHelper.getEmployeeCommission(
       this.supabase,
       employeeData.id,
       new Date().getFullYear(),
       new Date().getMonth() + 1,
     );
+
 
     const data: GetEmployeeResponse = {
       id: employeeData.id,
@@ -41,6 +45,7 @@ export class GetEmployeeService {
       email: employeeData.email,
       createdAt: new Date(employeeData.created_at),
       commission: commission.toNumber(),
+
     };
 
     return data;
