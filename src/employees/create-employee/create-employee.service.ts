@@ -21,7 +21,7 @@ export class CreateEmployeeService {
         first_name: firstName,
         last_name: lastName,
         email: email,
-        contact_number: contactNumber,
+        contact_no: contactNumber,
       })
       .select('*')
       .single();
