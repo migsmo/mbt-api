@@ -16,6 +16,7 @@ export class GetAllEmployeesController {
       limit: query.limit ? parseInt(query.limit as unknown as string, 10) : 10,
       sortBy: query.sortBy || 'created_at',
       sortDirection: query.sortDirection || 'desc',
+      search: query.search || undefined,
     };
 
     return await this.getAllEmployeesService.getAllEmployees(params);
