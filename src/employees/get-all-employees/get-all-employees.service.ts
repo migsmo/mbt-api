@@ -19,10 +19,6 @@ export class GetAllEmployeesService {
   ): Promise<GetAllEmployeesResponse> {
     const { page, limit, sortBy, sortDirection, search } = params;
 
-    // Calculate pagination parameters
-    const from = (page - 1) * limit;
-    const to = from + limit - 1;
-
     // Get total count first (for pagination metadata)
     const { count, error: countError } = await this.supabase
       .from('employees')
@@ -38,9 +34,23 @@ export class GetAllEmployeesService {
       query.ilike('full_name', `%${search}%`);
     }
 
-    const { data, error } = await query
-      .order(sortBy, { ascending: sortDirection === 'asc' })
-      .range(from, to);
+    let queryResult;
+
+    if (limit > 0) {
+      // Calculate pagination parameters
+      const from = (page - 1) * limit;
+      const to = from + limit - 1;
+
+      queryResult = await query
+        .order(sortBy, { ascending: sortDirection === 'asc' })
+        .range(from, to);
+    } else {
+      queryResult = await query.order(sortBy, {
+        ascending: sortDirection === 'asc',
+      });
+    }
+
+    const { data, error } = queryResult;
 
     // Map the service data to the response format
     const employees = (data as Employees[]).map((employeesData) =>
