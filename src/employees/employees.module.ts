@@ -1,5 +1,7 @@
 import { Module } from '@nestjs/common';
 import { SupabaseRequestProvider } from 'src/auth/providers/supabase-request.provider';
+import { AppointmentsHelper } from 'src/helpers/appointments.helpers';
+import { EmployeesHelper } from 'src/helpers/employees.helpers';
 import { CreateEmployeeController } from './create-employee/create-employee.controller';
 import { CreateEmployeeService } from './create-employee/create-employee.service';
 import { GetAllEmployeesController } from './get-all-employees/get-all-employees.controller';
@@ -18,6 +20,8 @@ import { GetEmployeeService } from './get-employee/get-employee.service';
     SupabaseRequestProvider,
     CreateEmployeeService,
     GetEmployeeService,
+    AppointmentsHelper,
+    EmployeesHelper,
   ],
 })
 export class EmployeesModule {}

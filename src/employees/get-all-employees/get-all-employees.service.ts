@@ -3,6 +3,7 @@ import { SupabaseClient } from '@supabase/supabase-js';
 import { PaginationMeta } from 'src/commons/dto/pagination-meta.dto';
 import { Employees } from 'src/entity/employees.entity';
 import { BaseError } from 'src/errors/base-error';
+import { EmployeesHelper } from 'src/helpers/employees.helpers';
 import { GetEmployeeResponse } from '../get-employee/dto/get-empoyee-response.dto';
 import { GetAllEmployeesRequest } from './dto/get-all-employees-request.dto';
 import { GetAllEmployeesResponse } from './dto/get-all-employees-response.dto';
@@ -12,6 +13,8 @@ export class GetAllEmployeesService {
   constructor(
     @Inject('SUPABASE_REQUEST_CLIENT')
     private readonly supabase: SupabaseClient,
+    @Inject(EmployeesHelper)
+    private readonly employeesHelper: EmployeesHelper,
   ) {}
 
   async getAllEmployees(
@@ -43,8 +46,10 @@ export class GetAllEmployeesService {
       .range(from, to);
 
     // Map the service data to the response format
-    const employees = (data as Employees[]).map((employeesData) =>
-      this.mapEmployeeData(employeesData),
+    const employees = await Promise.all(
+      (data as Employees[]).map((employeesData) =>
+        this.mapEmployeeData(employeesData),
+      ),
     );
 
     if (error) {
@@ -70,12 +75,22 @@ export class GetAllEmployeesService {
     };
   }
 
-  private mapEmployeeData(employeeData: Employees): GetEmployeeResponse {
+  private async mapEmployeeData(
+    employeeData: Employees,
+  ): Promise<GetEmployeeResponse> {
+    const commission = await this.employeesHelper.getEmployeeCommission(
+      this.supabase,
+      employeeData.id,
+      new Date().getFullYear(),
+      new Date().getMonth() + 1,
+    );
+
     return {
       id: employeeData.id,
       createdAt: new Date(employeeData.created_at),
       firstName: employeeData.first_name,
       lastName: employeeData.last_name,
+      commission: commission.toNumber(),
     };
   }
 }

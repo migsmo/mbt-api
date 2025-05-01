@@ -2,6 +2,7 @@ import { Inject, Injectable } from '@nestjs/common';
 import { SupabaseClient } from '@supabase/supabase-js';
 import { SUPABASE_REQUEST_CLIENT } from 'src/auth/providers/supabase-request.provider';
 import { Appointments } from 'src/entity/appointments.entity';
+import { Service } from 'src/entity/service.entity';
 import { BaseError } from 'src/errors/base-error';
 import { CreateAppointmentRequest } from './dto/create-appointment-request.dto';
 import { CreateAppointmentResponse } from './dto/create-appointment-response.dto';
@@ -49,6 +50,9 @@ export class CreateAppointmentService {
       throw new BaseError('This time slot is fully booked.');
     }
 
+    for (const serviceId of request.selectedServices) {
+      await this.checkServiceIsReal(serviceId);
+    }
     // Insert the appointment
     const appointment = await this.supabase
       .from('appointments')
@@ -96,5 +100,21 @@ export class CreateAppointmentService {
     };
 
     return response;
+  }
+
+  async checkServiceIsReal(serviceId: string) {
+    const service = await this.supabase
+      .from('services')
+      .select('*')
+      .eq('id', serviceId)
+      .single();
+
+    const serviceData = service.data as Service;
+
+    if (service.error) {
+      throw new BaseError(`Failed to get service: ${service.error.message}`);
+    }
+
+    return serviceData;
   }
 }

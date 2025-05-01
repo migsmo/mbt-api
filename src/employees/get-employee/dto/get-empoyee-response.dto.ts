@@ -5,4 +5,5 @@ export class GetEmployeeResponse {
   lastName: string;
   contactNumber?: string;
   email?: string;
+  commission: number;
 }
