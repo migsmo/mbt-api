@@ -19,13 +19,17 @@ export class GetServicesService {
 
     const { count, error: countError } = await this.supabase
       .from('services')
-      .select('*', { count: 'exact', head: true });
+      .select('*', { count: 'exact', head: true })
+      .is('is_deleted', false);
 
     if (countError) {
       throw new BaseError(`Failed to count services: ${countError.message}`);
     }
 
-    const query = this.supabase.from('services').select('*');
+    const query = this.supabase
+      .from('services')
+      .select('*')
+      .is('is_deleted', false);
 
     let queryResult;
 

@@ -16,6 +16,7 @@ export class GetServiceService {
       .from('services')
       .select('*')
       .eq('id', id)
+      .is('is_deleted', false)
       .single();
 
     const serviceData = service.data as Service;

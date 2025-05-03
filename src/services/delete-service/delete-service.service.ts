@@ -13,7 +13,7 @@ export class DeleteServiceService {
   async deleteService(id: string): Promise<DeleteServiceResponse> {
     const { error } = await this.supabase
       .from('services')
-      .delete()
+      .update({ is_deleted: true })
       .eq('id', id);
 
     if (error) {
