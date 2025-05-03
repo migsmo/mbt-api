@@ -19,11 +19,6 @@ export class GetAllCustomersService {
   ): Promise<GetAllCustomersResponse> {
     const { page, limit, sortBy, sortDirection } = params;
 
-    // Calculate pagination parameters
-    const from = (page - 1) * limit;
-    const to = from + limit - 1;
-
-    // Get total count first (for pagination metadata)
     const { count, error: countError } = await this.supabase
       .from('customers')
       .select('*', { count: 'exact', head: true });
@@ -32,12 +27,25 @@ export class GetAllCustomersService {
       throw new BaseError(`Failed to count customers: ${countError.message}`);
     }
 
+    const query = this.supabase.from('customers').select('*');
+
+    let queryResult;
+
+    if (limit > 0) {
+      const from = (page - 1) * limit;
+      const to = from + limit - 1;
+
+      queryResult = await query
+        .order(sortBy, { ascending: sortDirection === 'asc' })
+        .range(from, to);
+    } else {
+      queryResult = await query.order(sortBy, {
+        ascending: sortDirection === 'asc',
+      });
+    }
+
     // Get paginated data
-    const { data, error } = await this.supabase
-      .from('customers')
-      .select('*')
-      .order(sortBy, { ascending: sortDirection === 'asc' })
-      .range(from, to);
+    const { data, error } = queryResult;
 
     if (error) {
       throw new BaseError(`Failed to get customers: ${error.message}`);

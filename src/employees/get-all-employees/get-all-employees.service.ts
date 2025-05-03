@@ -37,7 +37,6 @@ export class GetAllEmployeesService {
       query.ilike('full_name', `%${search}%`);
     }
 
-
     let queryResult;
 
     if (limit > 0) {
