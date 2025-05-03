@@ -8,4 +8,5 @@ export class Customers {
   email: string;
   occupation: string;
   additional_remarks: string;
+  is_deleted: boolean;
 }

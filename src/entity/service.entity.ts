@@ -6,4 +6,5 @@ export class Service {
   description: string;
   created_at: string;
   duration_in_minutes: number;
+  is_deleted: boolean;
 }
