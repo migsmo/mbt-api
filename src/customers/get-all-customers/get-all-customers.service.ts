@@ -21,13 +21,17 @@ export class GetAllCustomersService {
 
     const { count, error: countError } = await this.supabase
       .from('customers')
-      .select('*', { count: 'exact', head: true });
+      .select('*', { count: 'exact', head: true })
+      .is('is_deleted', false);
 
     if (countError) {
       throw new BaseError(`Failed to count customers: ${countError.message}`);
     }
 
-    const query = this.supabase.from('customers').select('*');
+    const query = this.supabase
+      .from('customers')
+      .select('*')
+      .is('is_deleted', false);
 
     let queryResult;
 

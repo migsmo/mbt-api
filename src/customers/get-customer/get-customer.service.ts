@@ -16,6 +16,7 @@ export class GetCustomerService {
       .from('customers')
       .select('*')
       .eq('id', id)
+      .is('is_deleted', false)
       .single();
 
     const customerData = customer.data as Customers;

@@ -27,6 +27,7 @@ export class UpdateCustomerService {
       .from('customers')
       .update(updateRequest)
       .eq('id', request.id)
+      .is('is_deleted', false)
       .select()
       .single();
 
