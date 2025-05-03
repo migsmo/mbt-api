@@ -95,12 +95,21 @@ export class GetAllEmployeesService {
       new Date().getMonth() + 1,
     );
 
-    return {
+    const employee: GetEmployeeResponse = {
       id: employeeData.id,
       createdAt: new Date(employeeData.created_at),
       firstName: employeeData.first_name,
       lastName: employeeData.last_name,
       commission: commission.toNumber(),
     };
+
+    if (employeeData.contact_no) {
+      employee.contactNumber = employeeData.contact_no;
+    }
+    if (employeeData.email) {
+      employee.email = employeeData.email;
+    }
+
+    return employee;
   }
 }
