@@ -1,45 +1,53 @@
 import { Inject, Injectable } from '@nestjs/common';
 import { SupabaseClient } from '@supabase/supabase-js';
+import { fromZonedTime, toZonedTime } from 'date-fns-tz';
 import { SUPABASE_REQUEST_CLIENT } from 'src/auth/providers/supabase-request.provider';
 import { BaseError } from 'src/errors/base-error';
 import { GetAvailableDaySlotSResponse } from './dto/get-available-day-slots-response.dto';
 
 @Injectable()
 export class GetAvailableDaySlotSService {
+  private readonly TIMEZONE = 'Asia/Manila';
+
   constructor(
     @Inject(SUPABASE_REQUEST_CLIENT)
     private readonly supabase: SupabaseClient,
   ) {}
+
   async getAvailableSlotsForDay(
     day: string,
   ): Promise<GetAvailableDaySlotSResponse> {
-    const requestedDay = new Date(day);
-    requestedDay.setHours(0, 0, 0, 0);
+    // Convert incoming date to Manila time
+    const requestedDayLocal = toZonedTime(new Date(day), this.TIMEZONE);
+    requestedDayLocal.setHours(0, 0, 0, 0);
 
-    if (isNaN(requestedDay.getTime())) {
+    if (isNaN(requestedDayLocal.getTime())) {
       throw new BaseError('Invalid day format.');
     }
 
-    const now = new Date();
+    // Current day in Manila time
+    const now = toZonedTime(new Date(), this.TIMEZONE);
     now.setHours(0, 0, 0, 0);
 
-    const maxDate = new Date();
+    // Max date = 3 months from now
+    const maxDate = new Date(now);
     maxDate.setMonth(maxDate.getMonth() + 3);
     maxDate.setHours(0, 0, 0, 0);
 
-    if (requestedDay < now || requestedDay > maxDate) {
+    if (requestedDayLocal < now || requestedDayLocal > maxDate) {
       throw new BaseError('Date must be within the next 3 months.');
     }
 
     const timeSlots: string[] = [];
-    const dayStart = new Date(day);
-    dayStart.setHours(10, 0, 0, 0);
 
     for (let hour = 10; hour < 22; hour++) {
       for (const minute of [0, 30]) {
-        const slot = new Date(dayStart);
-        slot.setHours(hour, minute, 0, 0);
-        timeSlots.push(slot.toISOString());
+        const localSlot = new Date(requestedDayLocal);
+        localSlot.setHours(hour, minute, 0, 0);
+
+        // Convert Manila time to UTC for Supabase
+        const utcSlot = fromZonedTime(localSlot, this.TIMEZONE);
+        timeSlots.push(utcSlot.toISOString());
       }
     }
 
