@@ -23,7 +23,7 @@ export class GetAllAppointmentsService {
     const formattedEndDate = new Date(endDate);
 
     formattedStartDate.setHours(0, 0, 0, 0);
-    formattedEndDate.setHours(0, 0, 0, 0);
+    formattedEndDate.setHours(23, 59, 59, 999);
 
     if (
       isNaN(formattedStartDate.getTime()) ||
