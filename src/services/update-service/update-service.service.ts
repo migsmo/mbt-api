@@ -21,7 +21,6 @@ export class UpdateServiceService {
       duration_in_minutes: request.durationInMinutes,
     };
 
-    console.log(request);
     const service = await this.supabase
       .from('services')
       .update(updateRequest)

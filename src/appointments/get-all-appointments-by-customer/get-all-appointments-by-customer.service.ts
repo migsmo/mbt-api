@@ -21,9 +21,6 @@ export class GetAllAppointmentsByCustomerService {
   ): Promise<GetAllAppointmentsByCustomerResponse> {
     const { page, limit, sortBy, sortDirection } = params;
 
-    console.log('customerId', customerId);
-    console.log('params', params);
-
     // Calculate pagination parameters
     const from = (page - 1) * limit;
     const to = from + limit - 1;

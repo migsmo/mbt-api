@@ -16,8 +16,6 @@ export class GetAvailableDaySlotSService {
     const requestedDay = new Date(day);
     requestedDay.setHours(0, 0, 0, 0);
 
-    console.log('requestedDay', requestedDay);
-
     if (isNaN(requestedDay.getTime())) {
       throw new BaseError('Invalid day format.');
     }
@@ -25,15 +23,9 @@ export class GetAvailableDaySlotSService {
     const now = new Date();
     now.setHours(0, 0, 0, 0);
 
-    console.log('now', now);
-
     const maxDate = new Date();
     maxDate.setMonth(maxDate.getMonth() + 3);
     maxDate.setHours(0, 0, 0, 0);
-
-    console.log('maxDate', maxDate);
-
-    console.log(maxDate);
 
     if (requestedDay < now || requestedDay > maxDate) {
       throw new BaseError('Date must be within the next 3 months.');
