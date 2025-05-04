@@ -15,6 +15,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.CreateAppointmentService = void 0;
 const common_1 = require("@nestjs/common");
 const supabase_js_1 = require("@supabase/supabase-js");
+const date_fns_tz_1 = require("date-fns-tz");
 const supabase_request_provider_1 = require("../../auth/providers/supabase-request.provider");
 const base_error_1 = require("../../errors/base-error");
 let CreateAppointmentService = class CreateAppointmentService {
@@ -23,25 +24,29 @@ let CreateAppointmentService = class CreateAppointmentService {
         this.supabase = supabase;
     }
     async createAppointment(request) {
-        const appointmentTime = new Date(request.dateTime);
-        const now = new Date();
-        const maxDate = new Date();
-        maxDate.setMonth(maxDate.getMonth() + 3);
-        if (isNaN(appointmentTime.getTime())) {
+        const TIMEZONE = 'Asia/Manila';
+        const appointmentUtc = new Date(request.dateTime);
+        const appointmentTimePH = (0, date_fns_tz_1.toZonedTime)(appointmentUtc, TIMEZONE);
+        if (isNaN(appointmentTimePH.getTime())) {
             throw new base_error_1.BaseError('Invalid day format.');
         }
-        if (appointmentTime < now || appointmentTime > maxDate) {
+        const nowPH = (0, date_fns_tz_1.toZonedTime)(new Date(), TIMEZONE);
+        const maxDatePH = new Date(nowPH);
+        maxDatePH.setMonth(maxDatePH.getMonth() + 3);
+        maxDatePH.setHours(0, 0, 0, 0);
+        if (appointmentTimePH < nowPH || appointmentTimePH > maxDatePH) {
             throw new base_error_1.BaseError('Appointment must be within 3 months from today.');
         }
-        const hour = appointmentTime.getHours();
-        const minute = appointmentTime.getMinutes();
+        const hour = appointmentTimePH.getHours();
+        const minute = appointmentTimePH.getMinutes();
         if (hour < 10 || hour >= 22 || (minute !== 0 && minute !== 30)) {
             throw new base_error_1.BaseError('Appointments are only allowed between 10:00 AM and 10:00 PM in 30-minute intervals.');
         }
+        const appointmentUTCString = (0, date_fns_tz_1.fromZonedTime)(appointmentTimePH, TIMEZONE).toISOString();
         const { data: existingAppointments, error } = await this.supabase
             .from('appointments')
             .select('id')
-            .eq('date_time', appointmentTime.toISOString());
+            .eq('date_time', appointmentUTCString);
         if (error)
             throw new Error(error.message);
         if (existingAppointments.length >= 4) {
@@ -50,15 +55,16 @@ let CreateAppointmentService = class CreateAppointmentService {
         for (const serviceId of request.selectedServices) {
             await this.checkServiceIsReal(serviceId);
         }
+        const createdAtUTC = new Date().toISOString();
         const appointment = await this.supabase
             .from('appointments')
             .insert([
             {
-                date_time: appointmentTime.toISOString(),
+                date_time: appointmentUTCString,
                 customer_assigned: request.customerId,
                 selected_services: request.selectedServices,
                 additional_remarks: request.additionalRemarks ?? '',
-                created_at: new Date().toISOString(),
+                created_at: createdAtUTC,
             },
         ])
             .select()
@@ -79,7 +85,7 @@ let CreateAppointmentService = class CreateAppointmentService {
         }
         const response = {
             appointmentId: appointmentData.id,
-            dateTime: appointmentTime.toISOString(),
+            dateTime: appointmentUTCString,
             customerId: request.customerId,
             selectedServices: request.selectedServices,
             additionalRemarks: request.additionalRemarks ?? '',
