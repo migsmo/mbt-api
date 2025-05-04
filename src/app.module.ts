@@ -14,7 +14,7 @@ import { ServicesModule } from './services/service.module';
   imports: [
     AuthModule,
     ConfigModule.forRoot({
-      envFilePath: process.env.NODE_ENV === 'production' ? 'prod.env' : '.env',
+      envFilePath: process.env.NODE_ENV === 'production' ? '.prod.env' : '.env',
       isGlobal: true,
     }),
     CommonModule,
