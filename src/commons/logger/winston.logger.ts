@@ -6,6 +6,8 @@ const { combine, timestamp, printf, colorize, errors } = format;
 
 const dateStr = new Date().toISOString().split('T')[0];
 
+const isServerless = process.env.NODE_ENV === 'production';
+
 interface LogInfo extends TransformableInfo {
   stack?: string;
   message: string;
@@ -23,12 +25,17 @@ export const winstonLogger = createLogger({
     errors({ stack: true }), // logs stack trace
     logFormat,
   ),
+
   transports: [
-    new transports.File({
-      filename: path.join(__dirname, `../../../logs/${dateStr}.log`),
-    }),
     new transports.Console({
-      format: format.combine(format.colorize(), logFormat),
+      format: combine(colorize(), logFormat),
     }),
+    ...(!isServerless
+      ? [
+          new transports.File({
+            filename: path.join(__dirname, `../../../logs/${dateStr}.log`),
+          }),
+        ]
+      : []),
   ],
 });
