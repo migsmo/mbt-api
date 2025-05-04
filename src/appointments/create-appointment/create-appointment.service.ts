@@ -1,5 +1,6 @@
 import { Inject, Injectable } from '@nestjs/common';
 import { SupabaseClient } from '@supabase/supabase-js';
+import { fromZonedTime, toZonedTime } from 'date-fns-tz';
 import { SUPABASE_REQUEST_CLIENT } from 'src/auth/providers/supabase-request.provider';
 import { Appointments } from 'src/entity/appointments.entity';
 import { Service } from 'src/entity/service.entity';
@@ -15,23 +16,30 @@ export class CreateAppointmentService {
   ) {}
 
   async createAppointment(request: CreateAppointmentRequest) {
-    const appointmentTime = new Date(request.dateTime);
-    const now = new Date();
+    const TIMEZONE = 'Asia/Manila';
 
-    const maxDate = new Date();
-    maxDate.setMonth(maxDate.getMonth() + 3);
+    // Parse client-provided datetime as UTC, then convert to Manila time
+    const appointmentUtc = new Date(request.dateTime);
+    const appointmentTimePH = toZonedTime(appointmentUtc, TIMEZONE);
 
-    if (isNaN(appointmentTime.getTime())) {
+    if (isNaN(appointmentTimePH.getTime())) {
       throw new BaseError('Invalid day format.');
     }
 
+    // Manila "now" and "maxDate"
+    const nowPH = toZonedTime(new Date(), TIMEZONE);
+    const maxDatePH = new Date(nowPH);
+    maxDatePH.setMonth(maxDatePH.getMonth() + 3);
+    maxDatePH.setHours(0, 0, 0, 0);
+
     // Time and date constraints
-    if (appointmentTime < now || appointmentTime > maxDate) {
+    if (appointmentTimePH < nowPH || appointmentTimePH > maxDatePH) {
       throw new BaseError('Appointment must be within 3 months from today.');
     }
 
-    const hour = appointmentTime.getHours();
-    const minute = appointmentTime.getMinutes();
+    // Check business hours
+    const hour = appointmentTimePH.getHours();
+    const minute = appointmentTimePH.getMinutes();
 
     if (hour < 10 || hour >= 22 || (minute !== 0 && minute !== 30)) {
       throw new BaseError(
@@ -39,11 +47,16 @@ export class CreateAppointmentService {
       );
     }
 
-    // Check slot availability
+    // Check slot availability (store in UTC in DB)
+    const appointmentUTCString = fromZonedTime(
+      appointmentTimePH,
+      TIMEZONE,
+    ).toISOString();
+
     const { data: existingAppointments, error } = await this.supabase
       .from('appointments')
       .select('id')
-      .eq('date_time', appointmentTime.toISOString());
+      .eq('date_time', appointmentUTCString);
 
     if (error) throw new Error(error.message);
     if (existingAppointments.length >= 4) {
@@ -53,16 +66,19 @@ export class CreateAppointmentService {
     for (const serviceId of request.selectedServices) {
       await this.checkServiceIsReal(serviceId);
     }
-    // Insert the appointment
+
+    const createdAtUTC = new Date().toISOString();
+
+    // Insert appointment
     const appointment = await this.supabase
       .from('appointments')
       .insert([
         {
-          date_time: appointmentTime.toISOString(),
+          date_time: appointmentUTCString,
           customer_assigned: request.customerId,
-          selected_services: request.selectedServices, // Optional: keep for summary
+          selected_services: request.selectedServices,
           additional_remarks: request.additionalRemarks ?? '',
-          created_at: new Date().toISOString(),
+          created_at: createdAtUTC,
         },
       ])
       .select()
@@ -72,12 +88,12 @@ export class CreateAppointmentService {
 
     const appointmentData = appointment.data as Appointments;
 
-    // Insert into appointment_services table for each selected service
+    // Insert appointment_services
     const appointmentServicesToInsert = request.selectedServices.map(
       (serviceId) => ({
         appointment_id: appointmentData.id,
         service_id: serviceId,
-        employee_ids: [], // Initially empty
+        employee_ids: [],
       }),
     );
 
@@ -91,11 +107,11 @@ export class CreateAppointmentService {
 
     const response: CreateAppointmentResponse = {
       appointmentId: appointmentData.id,
-      dateTime: appointmentTime.toISOString(),
+      dateTime: appointmentUTCString,
       customerId: request.customerId,
       selectedServices: request.selectedServices,
       additionalRemarks: request.additionalRemarks ?? '',
-      status: 'pending', // Default status
+      status: 'pending',
       createdAt: new Date(appointmentData.created_at),
     };
 
