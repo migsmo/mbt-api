@@ -6,7 +6,6 @@ import { AppointmentBillingsModule } from './appointment-billings/appointment-bi
 import { AppointmentsModule } from './appointments/appointments.module';
 import { AuthModule } from './auth/auth.module';
 import { CommonModule } from './commons/common.module';
-import config from './config/config';
 import { CustomersModule } from './customers/customers.module';
 import { EmployeesModule } from './employees/employees.module';
 import { ServicesModule } from './services/service.module';
@@ -15,7 +14,7 @@ import { ServicesModule } from './services/service.module';
   imports: [
     AuthModule,
     ConfigModule.forRoot({
-      load: [config],
+      envFilePath: process.env.NODE_ENV === 'production' ? 'prod.env' : '.env',
       isGlobal: true,
     }),
     CommonModule,

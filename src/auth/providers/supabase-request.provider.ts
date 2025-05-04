@@ -14,8 +14,8 @@ export const SupabaseRequestProvider: Provider = {
     configService: ConfigService,
     request: Request,
   ): Promise<SupabaseClient> => {
-    const supabaseUrl = configService.get<string>('supabaseUrl');
-    const supabaseKey = configService.get<string>('supabaseKey');
+    const supabaseUrl = configService.get<string>('NEXT_PUBLIC_SUPABASE_URL');
+    const supabaseKey = configService.get<string>('SUPABASE_ANON_KEY');
 
     if (supabaseUrl === undefined || supabaseKey === undefined) {
       throw new SupabaseInitializationError('Check configuration settings.');
@@ -29,11 +29,6 @@ export const SupabaseRequestProvider: Provider = {
       const authHeader = request.headers.authorization;
       if (authHeader && authHeader.startsWith('Bearer ')) {
         const accessToken = authHeader.split(' ')[1];
-
-        console.log(
-          'access' + accessToken,
-          'refresh' + request.cookies['refreshToken'],
-        );
 
         await client.auth.setSession({
           access_token: accessToken,

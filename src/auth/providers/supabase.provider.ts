@@ -8,8 +8,8 @@ export const SUPABASE_CLIENT = 'SUPABASE_CLIENT';
 export const SupabaseProvider: Provider = {
   provide: SUPABASE_CLIENT,
   useFactory: (configService: ConfigService): SupabaseClient => {
-    const supabaseUrl = configService.get<string>('supabaseUrl');
-    const supabaseKey = configService.get<string>('supabaseKey');
+    const supabaseUrl = configService.get<string>('NEXT_PUBLIC_SUPABASE_URL');
+    const supabaseKey = configService.get<string>('SUPABASE_ANON_KEY');
 
     if (supabaseUrl === undefined || supabaseKey === undefined) {
       throw new SupabaseInitializationError('Check configuration settings.');

@@ -9,9 +9,12 @@ export class CookieService {
   setAuthCookie(res: Response, token: string): void {
     const cookieOptions = {
       httpOnly: true,
-      secure: false,
-      sameSite: 'lax' as const,
-      maxAge: 3600000,
+      secure: this.configService.get<boolean>('COOKIE_SECURE', true), // Default to true in production
+      sameSite: this.configService.get<'lax' | 'strict' | 'none'>(
+        'COOKIE_SAMESITE',
+        'lax',
+      ),
+      maxAge: this.configService.get<number>('COOKIE_MAX_AGE', 3600000), // Default to 1 hour
     };
 
     res.cookie('refreshToken', token, cookieOptions);
