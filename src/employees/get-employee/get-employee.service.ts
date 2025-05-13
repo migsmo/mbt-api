@@ -19,6 +19,7 @@ export class GetEmployeeService {
       .from('employees')
       .select('*')
       .eq('id', id)
+      .is('is_deleted', false)
       .single();
 
     const employeeData = employee.data as Employees;

@@ -4,16 +4,22 @@ import { AppointmentsHelper } from 'src/helpers/appointments.helpers';
 import { EmployeesHelper } from 'src/helpers/employees.helpers';
 import { CreateEmployeeController } from './create-employee/create-employee.controller';
 import { CreateEmployeeService } from './create-employee/create-employee.service';
+import { DeleteEmployeeController } from './delete-employee/delete-employee.controller';
+import { DeleteEmployeeService } from './delete-employee/delete-employee.service';
 import { GetAllEmployeesController } from './get-all-employees/get-all-employees.controller';
 import { GetAllEmployeesService } from './get-all-employees/get-all-employees.service';
 import { GetEmployeeController } from './get-employee/get-employee.controller';
 import { GetEmployeeService } from './get-employee/get-employee.service';
+import { UpodateEmployeeController } from './update-employee/update-employee.controller';
+import { UpdateEmployeeService } from './update-employee/update-employee.service';
 
 @Module({
   controllers: [
     GetAllEmployeesController,
     CreateEmployeeController,
     GetEmployeeController,
+    UpodateEmployeeController,
+    DeleteEmployeeController,
   ],
   providers: [
     GetAllEmployeesService,
@@ -22,6 +28,8 @@ import { GetEmployeeService } from './get-employee/get-employee.service';
     GetEmployeeService,
     AppointmentsHelper,
     EmployeesHelper,
+    UpdateEmployeeService,
+    DeleteEmployeeService,
   ],
 })
 export class EmployeesModule {}
