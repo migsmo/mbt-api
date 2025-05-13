@@ -25,13 +25,17 @@ export class GetAllEmployeesService {
     // Get total count first (for pagination metadata)
     const { count, error: countError } = await this.supabase
       .from('employees')
-      .select('*', { count: 'exact', head: true });
+      .select('*', { count: 'exact', head: true })
+      .is('is_deleted', false);
 
     if (countError) {
       throw new BaseError(`Failed to count employees: ${countError.message}`);
     }
 
-    const query = this.supabase.from('employees').select('*');
+    const query = this.supabase
+      .from('employees')
+      .select('*')
+      .is('is_deleted', false);
 
     if (search) {
       query.ilike('full_name', `%${search}%`);
