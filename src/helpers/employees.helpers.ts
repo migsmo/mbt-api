@@ -2,6 +2,7 @@ import { Inject, Injectable } from '@nestjs/common';
 import { SupabaseClient } from '@supabase/supabase-js';
 import Decimal from 'decimal.js';
 import { AppointmentServices } from 'src/entity/appointmentService.entity';
+import { Service } from 'src/entity/service.entity';
 import { AppointmentsHelper } from './appointments.helpers';
 
 @Injectable()
@@ -47,14 +48,29 @@ export class EmployeesHelper {
 
     const serviceIds = appointmentServicesData.map((s) => s.service_id);
 
-    const { data: serviceInfo, error: serviceError } = await supabase
+    const services = await supabase
       .from('services')
       .select('id, price, commission_rate')
       .in('id', serviceIds);
 
-    if (serviceError) throw new Error(serviceError.message);
+    const servicesData = services.data as Service[];
 
-    const serviceMap = new Map(serviceInfo.map((s) => [s.id, s]));
+    if (services.error) throw new Error(services.error.message);
+
+    const totalCommission =
+      this.calculateEmployeeCommissionByAppointmentServices(
+        appointmentServicesData,
+        servicesData,
+      );
+
+    return totalCommission;
+  }
+
+  calculateEmployeeCommissionByAppointmentServices(
+    appointmentServicesData: AppointmentServices[],
+    servicesData: Service[],
+  ): Decimal {
+    const serviceMap = new Map(servicesData.map((s) => [s.id, s]));
 
     let totalCommission = new Decimal(0);
 
