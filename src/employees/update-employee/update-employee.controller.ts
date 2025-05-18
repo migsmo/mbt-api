@@ -5,7 +5,7 @@ import { UpdateEmployeeResponse } from './dto/update-employee-response.dto';
 import { UpdateEmployeeService } from './update-employee.service';
 
 @Controller(routes.employees.root)
-export class UpodateEmployeeController {
+export class UpdateEmployeeController {
   constructor(private readonly updateEmployeeService: UpdateEmployeeService) {}
 
   @Put(routes.employees.update)
