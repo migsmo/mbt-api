@@ -1,1 +1,0 @@
-{"version":3,"file":"get-employee-appointments.request.dto.js","sourceRoot":"","sources":["../../../../src/employees/get-employee-appointments/dto/get-employee-appointments.request.dto.ts"],"names":[],"mappings":";;;AAAA,MAAa,8BAA8B;IACzC,IAAI,GAAW,CAAC,CAAC;IACjB,KAAK,GAAW,EAAE,CAAC;IACnB,MAAM,GAAW,YAAY,CAAC;IAC9B,aAAa,GAAmB,MAAM,CAAC;CACxC;AALD,wEAKC"}
