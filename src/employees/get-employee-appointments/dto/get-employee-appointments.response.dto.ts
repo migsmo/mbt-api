@@ -1,8 +1,16 @@
-import { GetAppointmentResponse } from 'src/appointments/get-appointment/dto/get-appointment-response.dto';
 import { PaginationMeta } from 'src/commons/dto/pagination-meta.dto';
 
-export class GetAllAppointmentsByEmployeeResponse {
-  employeeId: string;
-  appointments: GetAppointmentResponse[];
+export class EmployeeAppointments {
+  appointmentId: string;
+  appointmentDate: Date;
+  customerName: string;
+  services: string[];
+  commission: number;
+}
+export class GetEmployeeAppointmentsResponse {
+  data: {
+    employeeId: string;
+    appointments: EmployeeAppointments[];
+  };
   meta: PaginationMeta;
 }

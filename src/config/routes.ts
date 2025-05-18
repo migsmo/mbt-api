@@ -20,6 +20,7 @@ export const routes = {
     create: '/create',
     delete: '/:id',
     update: '/update',
+    getAllAppointments: '/:employeeId/appointments',
   },
   appointments: {
     root: '/appointments',

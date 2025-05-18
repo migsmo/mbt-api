@@ -22,4 +22,39 @@ export class AppointmentsHelper {
 
     return appointmentsData;
   }
+
+  async getAppointmentById(supabase: SupabaseClient, appointmentId: string) {
+    const appointments = await supabase
+      .from('appointments')
+      .select('*')
+      .eq('id', appointmentId)
+      .single();
+
+    if (appointments.error) throw new BaseError(appointments.error.message);
+
+    const appointmentsData = appointments.data as Appointments;
+
+    return appointmentsData;
+  }
+
+  async getAppointmentByIds(
+    supabase: SupabaseClient,
+    appointmentIds: string[],
+    sortBy: string,
+    sortDirection: 'asc' | 'desc',
+  ) {
+    const appointments = await supabase
+      .from('appointments')
+      .select('*')
+      .in('id', appointmentIds)
+      .order(sortBy, {
+        ascending: sortDirection === 'asc',
+      });
+
+    if (appointments.error) throw new BaseError(appointments.error.message);
+
+    const appointmentsData = appointments.data as Appointments[];
+
+    return appointmentsData;
+  }
 }
