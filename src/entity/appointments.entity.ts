@@ -7,4 +7,5 @@ export class Appointments {
   customer_assigned: string;
   is_completed: boolean;
   is_deleted: boolean;
+  unpaid_amount: number;
 }
