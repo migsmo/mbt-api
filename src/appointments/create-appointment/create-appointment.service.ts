@@ -63,8 +63,10 @@ export class CreateAppointmentService {
       throw new BaseError('This time slot is fully booked.');
     }
 
+    let appointmentTotalCost = 0;
     for (const serviceId of request.selectedServices) {
-      await this.checkServiceIsReal(serviceId);
+      const service = await this.checkServiceIsReal(serviceId);
+      appointmentTotalCost += service.price;
     }
 
     const createdAtUTC = new Date().toISOString();
@@ -79,6 +81,7 @@ export class CreateAppointmentService {
           selected_services: request.selectedServices,
           additional_remarks: request.additionalRemarks ?? '',
           created_at: createdAtUTC,
+          unpaid_amount: appointmentTotalCost,
         },
       ])
       .select()
