@@ -9,6 +9,9 @@ import { GetAppointmentResponse } from '../get-appointment/dto/get-appointment-r
 import { GetAllAppointmentsByCustomerRequest } from './dto/get-all-appointments-by-customer.request.dto';
 import { GetAllAppointmentsByCustomerResponse } from './dto/get-all-appointments-by-customer.response.dto';
 
+type Appointment_AppointmentService = Appointments & {
+  appointment_services: AppointmentServices[];
+};
 @Injectable()
 export class GetAllAppointmentsByCustomerService {
   constructor(
@@ -40,10 +43,12 @@ export class GetAllAppointmentsByCustomerService {
     // Get paginated data
     const { data, error } = await this.supabase
       .from('appointments')
-      .select('*')
+      .select('*, appointment_services (*)')
       .eq('customer_assigned', customerId)
       .order(sortBy, { ascending: sortDirection === 'asc' })
       .range(from, to);
+
+    const appointmentData = data as Appointment_AppointmentService[];
 
     if (error) {
       throw new BaseError(`Failed to get appointments: ${error.message}`);
@@ -51,9 +56,7 @@ export class GetAllAppointmentsByCustomerService {
 
     // Map the service data to the response format
     const appointments = await Promise.all(
-      (data as Appointments[]).map((appointmentData) =>
-        this.mapAppointmentData(appointmentData),
-      ),
+      appointmentData.map((appData) => this.mapAppointmentData(appData)),
     );
 
     // Calculate pagination metadata
@@ -77,16 +80,10 @@ export class GetAllAppointmentsByCustomerService {
 
     return response;
   }
-  private async mapAppointmentData(
-    appointment: Appointments,
-  ): Promise<GetAppointmentResponse> {
-    const appointmentService = await this.supabase
-      .from('appointment_services')
-      .select('*')
-      .eq('appointment_id', appointment.id);
-
-    const appointmentServiceData =
-      appointmentService.data as AppointmentServices[];
+  private mapAppointmentData(
+    appointment: Appointment_AppointmentService,
+  ): GetAppointmentResponse {
+    const appointmentServiceData = appointment.appointment_services;
 
     const selectedServices = appointmentServiceData.map((service) => {
       return {
