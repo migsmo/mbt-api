@@ -82,7 +82,7 @@ export class GetAllAppointmentsByCustomerService {
   }
   private mapAppointmentData(
     appointment: Appointment_AppointmentService,
-  ): GetAppointmentResponse & { unpaidAmount: number } {
+  ): GetAppointmentResponse & { unpaidAmount: number; paymentStatus: string } {
     const appointmentServiceData = appointment.appointment_services;
 
     console.log('Appointment Service Data:', appointmentServiceData);
@@ -104,6 +104,7 @@ export class GetAllAppointmentsByCustomerService {
       customerAssigned: appointment.customer_assigned,
       isCompleted: appointment.is_completed,
       unpaidAmount: appointment.unpaid_amount,
+      paymentStatus: appointment.unpaid_amount > 0 ? 'UNPAID' : 'PAID',
     };
   }
 }

@@ -4,6 +4,9 @@ import { PaginationMeta } from 'src/commons/dto/pagination-meta.dto';
 export class GetAllAppointmentsByCustomerResponse {
   customerId: string;
   // appointments: GetAppointmentResponse[];
-  appointments: (GetAppointmentResponse & { unpaidAmount: number })[];
+  appointments: (GetAppointmentResponse & {
+    unpaidAmount: number;
+    paymentStatus: string;
+  })[];
   meta: PaginationMeta;
 }
