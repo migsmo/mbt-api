@@ -3,7 +3,7 @@ import { PaginationMeta } from 'src/commons/dto/pagination-meta.dto';
 
 export class GetAllAppointmentsByCustomerResponse {
   customerId: string;
-  appointments: GetAppointmentResponse[];
-  // appointments: (GetAppointmentResponse & { paymentStatus: string })[];
+  // appointments: GetAppointmentResponse[];
+  appointments: (GetAppointmentResponse & { unpaidAmount: number })[];
   meta: PaginationMeta;
 }

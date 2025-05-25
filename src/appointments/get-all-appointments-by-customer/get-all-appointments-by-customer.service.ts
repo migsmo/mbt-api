@@ -43,7 +43,7 @@ export class GetAllAppointmentsByCustomerService {
     // Get paginated data
     const { data, error } = await this.supabase
       .from('appointments')
-      .select('*, appointment_services (*)')
+      .select('*, appointment_services (*, services(price))')
       .eq('customer_assigned', customerId)
       .order(sortBy, { ascending: sortDirection === 'asc' })
       .range(from, to);
@@ -82,9 +82,12 @@ export class GetAllAppointmentsByCustomerService {
   }
   private mapAppointmentData(
     appointment: Appointment_AppointmentService,
-  ): GetAppointmentResponse {
+  ): GetAppointmentResponse & { unpaidAmount: number } {
     const appointmentServiceData = appointment.appointment_services;
 
+    console.log('Appointment Service Data:', appointmentServiceData);
+
+    // Instead of returning IDs just return data from the appointment services
     const selectedServices = appointmentServiceData.map((service) => {
       return {
         serviceId: service.service_id,
@@ -100,6 +103,7 @@ export class GetAllAppointmentsByCustomerService {
       selectedServices: selectedServices,
       customerAssigned: appointment.customer_assigned,
       isCompleted: appointment.is_completed,
+      unpaidAmount: appointment.unpaid_amount,
     };
   }
 }
