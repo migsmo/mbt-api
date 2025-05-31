@@ -84,6 +84,7 @@ export class GetAllAppointmentsService {
       selectedServices: selectedServices,
       customerAssigned: appointment.customer_assigned,
       isCompleted: appointment.is_completed,
+      unpaidAmount: appointment.unpaid_amount,
     };
   }
 }

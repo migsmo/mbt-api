@@ -9,4 +9,5 @@ export class GetAppointmentResponse {
   }[];
   customerAssigned: string;
   isCompleted: boolean;
+  unpaidAmount: number;
 }

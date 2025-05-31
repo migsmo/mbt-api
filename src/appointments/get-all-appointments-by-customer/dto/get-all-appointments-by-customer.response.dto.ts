@@ -5,7 +5,6 @@ export class GetAllAppointmentsByCustomerResponse {
   customerId: string;
   // appointments: GetAppointmentResponse[];
   appointments: (GetAppointmentResponse & {
-    unpaidAmount: number;
     paymentStatus: string;
   })[];
   meta: PaginationMeta;
