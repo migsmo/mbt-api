@@ -8,4 +8,5 @@ export class GetCustomerResponse {
   email: string;
   occupation: string;
   additionalRemarks: string;
+  outstandingBalance?: number;
 }

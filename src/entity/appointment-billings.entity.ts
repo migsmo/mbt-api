@@ -4,4 +4,5 @@ export class AppointmentBillings {
   date_paid: Date;
   payment_type: string;
   amount: number;
+  is_deleted: boolean;
 }

@@ -1,6 +1,7 @@
 import { Inject, Injectable } from '@nestjs/common';
 import { SupabaseClient } from '@supabase/supabase-js';
 import { SUPABASE_REQUEST_CLIENT } from 'src/auth/providers/supabase-request.provider';
+import { Appointments } from 'src/entity/appointments.entity';
 import { BaseError } from 'src/errors/base-error';
 import { Customers } from '../../entity/customers.entity';
 import { UpdateCustomerRequest } from './dto/update-customer-request.dto';
@@ -39,6 +40,22 @@ export class UpdateCustomerService {
       );
     }
 
+    const appointments = await this.supabase
+      .from('appointments')
+      .select('id, unpaid_amount')
+      .eq('customer_assigned', request.id)
+      .is('is_cancelled', false);
+
+    const appointmentData = appointments.data as Appointments[];
+
+    let outstandingBalance = 0;
+
+    if (appointmentData.length > 0) {
+      appointmentData.forEach((appointment) => {
+        outstandingBalance += appointment.unpaid_amount;
+      });
+    }
+
     const response: UpdateCustomerResponse = {
       id: customerData.id,
       createdAt: new Date(customerData.created_at),
@@ -49,6 +66,7 @@ export class UpdateCustomerService {
       email: customerData.email,
       occupation: customerData.occupation,
       additionalRemarks: customerData.additional_remarks,
+      outstandingBalance: outstandingBalance || 0,
     };
 
     return response;

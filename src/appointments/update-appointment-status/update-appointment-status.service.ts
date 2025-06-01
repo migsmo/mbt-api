@@ -16,10 +16,21 @@ export class UpdateAppointmentStatusService {
   async updateAppointmentStatus(
     request: UpdateAppointmentStatusRequest,
   ): Promise<UpdateAppointmentStatusResponse> {
-    const { appointmentId, isCompleted } = request;
+    const { appointmentId, status } = request;
+
+    let updateObj: Partial<{ is_completed: boolean; is_cancelled: boolean }> =
+      {};
+    if (status === 'completed') {
+      updateObj = { is_completed: true, is_cancelled: false };
+    } else if (status === 'cancelled') {
+      updateObj = { is_completed: false, is_cancelled: true };
+    } else {
+      throw new BaseError('Invalid status value');
+    }
+
     const appointment = await this.supabase
       .from('appointments')
-      .update({ is_completed: isCompleted })
+      .update(updateObj)
       .eq('id', appointmentId)
       .select('*')
       .single();
@@ -35,6 +46,7 @@ export class UpdateAppointmentStatusService {
     const response: UpdateAppointmentStatusResponse = {
       appointmentId: appointmentData.id,
       isCompleted: appointmentData.is_completed,
+      isCancelled: appointmentData.is_cancelled,
     };
 
     return response;

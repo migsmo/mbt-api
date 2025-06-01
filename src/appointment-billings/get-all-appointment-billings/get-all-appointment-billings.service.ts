@@ -1,7 +1,7 @@
 import { Inject, Injectable } from '@nestjs/common';
 import { SupabaseClient } from '@supabase/supabase-js';
 import { SUPABASE_REQUEST_CLIENT } from 'src/auth/providers/supabase-request.provider';
-import { AppointmentBillings } from 'src/entity/appointmentBillings.entity';
+import { AppointmentBillings } from 'src/entity/appointment-billings.entity';
 import { BaseError } from 'src/errors/base-error';
 import { GetAllAppointmentBillingsResponse } from './dto/get-all-appointment-billings-response.dto';
 
@@ -18,6 +18,7 @@ export class GetAllAppointmentBillingsService {
     const appointmentBillings = await this.supabase
       .from('appointment_billings')
       .select('*')
+      .is('is_deleted', false)
       .eq('appointment_id', appointmentId);
 
     if (appointmentBillings.error?.message) {
