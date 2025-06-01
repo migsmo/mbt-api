@@ -36,7 +36,7 @@ export class DownloadAppointmentFilesService {
       );
     }
 
-    const [bucket, ...pathParts] = appointmentFileData.file_url.split('/');
+    const pathParts = appointmentFileData.file_url.split('/').slice(1);
     const filePath = pathParts.join('/');
 
     console.log('appointmentFileData.file_url', filePath);

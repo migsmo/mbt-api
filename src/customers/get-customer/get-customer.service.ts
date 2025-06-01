@@ -30,7 +30,7 @@ export class GetCustomerService {
       .from('appointments')
       .select('id, unpaid_amount')
       .eq('customer_assigned', id)
-      .is('is_deleted', false);
+      .is('is_cancelled', false);
 
     const appointmentData = appointments.data as Appointments[];
 

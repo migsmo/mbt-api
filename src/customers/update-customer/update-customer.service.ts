@@ -44,7 +44,7 @@ export class UpdateCustomerService {
       .from('appointments')
       .select('id, unpaid_amount')
       .eq('customer_assigned', request.id)
-      .is('is_deleted', false);
+      .is('is_cancelled', false);
 
     const appointmentData = appointments.data as Appointments[];
 

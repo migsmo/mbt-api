@@ -102,6 +102,7 @@ export class GetAllAppointmentsByCustomerService {
       additionalRemarks: appointment.additional_remarks,
       selectedServices: selectedServices,
       customerAssigned: appointment.customer_assigned,
+      isCancelled: appointment.is_cancelled,
       isCompleted: appointment.is_completed,
       unpaidAmount: appointment.unpaid_amount,
       paymentStatus: appointment.unpaid_amount > 0 ? 'UNPAID' : 'PAID',
