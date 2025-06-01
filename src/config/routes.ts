@@ -32,6 +32,9 @@ export const routes = {
     assignStaff: '/assign-staff',
     updateStatus: '/update-status',
     createBilling: '/create-billing',
+    uploadFiles: '/upload-files',
+    downloadFiles: '/download-files',
+    retrieveFiles: '/retrieve-files',
   },
   customers: {
     root: '/customers',
