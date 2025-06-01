@@ -1,11 +1,3 @@
-export declare class UpdateCustomerResponse {
-    id: string;
-    createdAt: Date;
-    firstName: string;
-    lastName: string;
-    address: string;
-    contactNumber: string;
-    email: string;
-    occupation: string;
-    additionalRemarks: string;
+import { GetCustomerResponse } from 'src/customers/get-customer/dto/get-customer-response.dto';
+export declare class UpdateCustomerResponse extends GetCustomerResponse {
 }

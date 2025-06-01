@@ -70,6 +70,8 @@ let GetAllAppointmentsService = class GetAllAppointmentsService {
             selectedServices: selectedServices,
             customerAssigned: appointment.customer_assigned,
             isCompleted: appointment.is_completed,
+            isCancelled: appointment.is_cancelled,
+            unpaidAmount: appointment.unpaid_amount,
         };
     }
 };

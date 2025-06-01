@@ -35,14 +35,15 @@ let GetAllAppointmentsByCustomerService = class GetAllAppointmentsByCustomerServ
         }
         const { data, error } = await this.supabase
             .from('appointments')
-            .select('*')
+            .select('*, appointment_services (*, services(price))')
             .eq('customer_assigned', customerId)
             .order(sortBy, { ascending: sortDirection === 'asc' })
             .range(from, to);
+        const appointmentData = data;
         if (error) {
             throw new base_error_1.BaseError(`Failed to get appointments: ${error.message}`);
         }
-        const appointments = await Promise.all(data.map((appointmentData) => this.mapAppointmentData(appointmentData)));
+        const appointments = await Promise.all(appointmentData.map((appData) => this.mapAppointmentData(appData)));
         const totalItems = count || 0;
         const totalPages = Math.ceil(totalItems / limit);
         const meta = {
@@ -60,12 +61,9 @@ let GetAllAppointmentsByCustomerService = class GetAllAppointmentsByCustomerServ
         };
         return response;
     }
-    async mapAppointmentData(appointment) {
-        const appointmentService = await this.supabase
-            .from('appointment_services')
-            .select('*')
-            .eq('appointment_id', appointment.id);
-        const appointmentServiceData = appointmentService.data;
+    mapAppointmentData(appointment) {
+        const appointmentServiceData = appointment.appointment_services;
+        console.log('Appointment Service Data:', appointmentServiceData);
         const selectedServices = appointmentServiceData.map((service) => {
             return {
                 serviceId: service.service_id,
@@ -79,7 +77,10 @@ let GetAllAppointmentsByCustomerService = class GetAllAppointmentsByCustomerServ
             additionalRemarks: appointment.additional_remarks,
             selectedServices: selectedServices,
             customerAssigned: appointment.customer_assigned,
+            isCancelled: appointment.is_cancelled,
             isCompleted: appointment.is_completed,
+            unpaidAmount: appointment.unpaid_amount,
+            paymentStatus: appointment.unpaid_amount > 0 ? 'UNPAID' : 'PAID',
         };
     }
 };

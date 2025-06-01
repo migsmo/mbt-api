@@ -9,6 +9,8 @@ class GetAppointmentResponse {
     selectedServices;
     customerAssigned;
     isCompleted;
+    isCancelled;
+    unpaidAmount;
 }
 exports.GetAppointmentResponse = GetAppointmentResponse;
 //# sourceMappingURL=get-appointment-response.dto.js.map

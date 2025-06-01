@@ -7,6 +7,7 @@ class AppointmentBillings {
     date_paid;
     payment_type;
     amount;
+    is_deleted;
 }
 exports.AppointmentBillings = AppointmentBillings;
 //# sourceMappingURL=appointment-billings.entity.js.map

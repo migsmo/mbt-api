@@ -11,6 +11,7 @@ class GetCustomerResponse {
     email;
     occupation;
     additionalRemarks;
+    outstandingBalance;
 }
 exports.GetCustomerResponse = GetCustomerResponse;
 //# sourceMappingURL=get-customer-response.dto.js.map

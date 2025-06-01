@@ -32,6 +32,9 @@ export declare const routes: {
         assignStaff: string;
         updateStatus: string;
         createBilling: string;
+        uploadFiles: string;
+        downloadFiles: string;
+        retrieveFiles: string;
     };
     customers: {
         root: string;

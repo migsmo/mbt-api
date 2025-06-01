@@ -43,6 +43,18 @@ let UpdateCustomerService = class UpdateCustomerService {
         if (customer.error) {
             throw new base_error_1.BaseError(`Failed to update customer: ${customer.error.message}`);
         }
+        const appointments = await this.supabase
+            .from('appointments')
+            .select('id, unpaid_amount')
+            .eq('customer_assigned', request.id)
+            .is('is_cancelled', false);
+        const appointmentData = appointments.data;
+        let outstandingBalance = 0;
+        if (appointmentData.length > 0) {
+            appointmentData.forEach((appointment) => {
+                outstandingBalance += appointment.unpaid_amount;
+            });
+        }
         const response = {
             id: customerData.id,
             createdAt: new Date(customerData.created_at),
@@ -53,6 +65,7 @@ let UpdateCustomerService = class UpdateCustomerService {
             email: customerData.email,
             occupation: customerData.occupation,
             additionalRemarks: customerData.additional_remarks,
+            outstandingBalance: outstandingBalance || 0,
         };
         return response;
     }

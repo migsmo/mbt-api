@@ -51,7 +51,7 @@ let GetAllCustomersService = class GetAllCustomersService {
         if (error) {
             throw new base_error_1.BaseError(`Failed to get customers: ${error.message}`);
         }
-        const customers = data.map((customerData) => this.mapCustomerData(customerData));
+        const customers = await Promise.all(data.map((customerData) => this.mapCustomerData(customerData)));
         const totalItems = count || 0;
         const totalPages = Math.ceil(totalItems / limit);
         const meta = {
@@ -67,7 +67,19 @@ let GetAllCustomersService = class GetAllCustomersService {
             meta,
         };
     }
-    mapCustomerData(customerData) {
+    async mapCustomerData(customerData) {
+        const appointments = await this.supabase
+            .from('appointments')
+            .select('id, unpaid_amount')
+            .eq('customer_assigned', customerData.id)
+            .is('is_cancelled', false);
+        const appointmentData = appointments.data;
+        let outstandingBalance = 0;
+        if (appointmentData.length > 0) {
+            appointmentData.forEach((appointment) => {
+                outstandingBalance += appointment.unpaid_amount;
+            });
+        }
         return {
             id: customerData.id,
             createdAt: new Date(customerData.created_at),
@@ -78,6 +90,7 @@ let GetAllCustomersService = class GetAllCustomersService {
             contactNumber: customerData.contact_no,
             occupation: customerData.occupation,
             additionalRemarks: customerData.additional_remarks,
+            outstandingBalance: outstandingBalance || 0,
         };
     }
 };

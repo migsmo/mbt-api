@@ -2,6 +2,8 @@ import { GetAppointmentResponse } from 'src/appointments/get-appointment/dto/get
 import { PaginationMeta } from 'src/commons/dto/pagination-meta.dto';
 export declare class GetAllAppointmentsByCustomerResponse {
     customerId: string;
-    appointments: GetAppointmentResponse[];
+    appointments: (GetAppointmentResponse & {
+        paymentStatus: string;
+    })[];
     meta: PaginationMeta;
 }

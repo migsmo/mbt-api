@@ -13,6 +13,8 @@ const create_appointment_billing_service_1 = require("./create-appointment-billi
 const create_appointment_billings_controller_1 = require("./create-appointment-billing/create-appointment-billings.controller");
 const get_all_appointment_billings_controller_1 = require("./get-all-appointment-billings/get-all-appointment-billings.controller");
 const get_all_appointment_billings_service_1 = require("./get-all-appointment-billings/get-all-appointment-billings.service");
+const update_appointment_billings_controller_1 = require("./update-appointment-billings/update-appointment-billings.controller");
+const update_appointment_billings_service_1 = require("./update-appointment-billings/update-appointment-billings.service");
 let AppointmentBillingsModule = class AppointmentBillingsModule {
 };
 exports.AppointmentBillingsModule = AppointmentBillingsModule;
@@ -21,11 +23,13 @@ exports.AppointmentBillingsModule = AppointmentBillingsModule = __decorate([
         controllers: [
             create_appointment_billings_controller_1.CreateAppointmentBillingController,
             get_all_appointment_billings_controller_1.GetAllAppointmentBillingsController,
+            update_appointment_billings_controller_1.UpdateAppointmentBillingsController,
         ],
         providers: [
             supabase_request_provider_1.SupabaseRequestProvider,
             create_appointment_billing_service_1.CreateAppointmentBillingService,
             get_all_appointment_billings_service_1.GetAllAppointmentBillingsService,
+            update_appointment_billings_service_1.UpdateAppointmentBillingsService,
         ],
     })
 ], AppointmentBillingsModule);

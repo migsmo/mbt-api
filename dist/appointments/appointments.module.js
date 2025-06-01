@@ -9,10 +9,13 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.AppointmentsModule = void 0;
 const common_1 = require("@nestjs/common");
 const supabase_request_provider_1 = require("../auth/providers/supabase-request.provider");
+const appointments_helpers_1 = require("../helpers/appointments.helpers");
 const assign_staff_appointments_controller_1 = require("./assign-staff-appointments/assign-staff-appointments.controller");
 const assign_staff_appointments_service_1 = require("./assign-staff-appointments/assign-staff-appointments.service");
 const create_appointment_controller_1 = require("./create-appointment/create-appointment.controller");
 const create_appointment_service_1 = require("./create-appointment/create-appointment.service");
+const download_appointment_files_controller_1 = require("./download-appointment-files/download-appointment-files.controller");
+const download_appointmnet_files_service_1 = require("./download-appointment-files/download-appointmnet-files.service");
 const get_all_appointments_by_customer_controller_1 = require("./get-all-appointments-by-customer/get-all-appointments-by-customer.controller");
 const get_all_appointments_by_customer_service_1 = require("./get-all-appointments-by-customer/get-all-appointments-by-customer.service");
 const get_all_appointments_controller_1 = require("./get-all-appointments/get-all-appointments.controller");
@@ -21,8 +24,12 @@ const get_appointment_controller_1 = require("./get-appointment/get-appointment.
 const get_appointment_service_1 = require("./get-appointment/get-appointment.service");
 const get_available_day_slots_controller_1 = require("./get-available-day-slot/get-available-day-slots.controller");
 const get_available_day_slots_service_1 = require("./get-available-day-slot/get-available-day-slots.service");
+const retrieve_appointment_files_controller_1 = require("./retrieve-appointment-files/retrieve-appointment-files.controller");
+const retrieve_appointment_files_service_1 = require("./retrieve-appointment-files/retrieve-appointment-files.service");
 const update_appointment_status_controller_1 = require("./update-appointment-status/update-appointment-status.controller");
 const update_appointment_status_service_1 = require("./update-appointment-status/update-appointment-status.service");
+const upload_appointment_files_controller_1 = require("./upload-appointment-files/upload-appointment-files.controller");
+const upload_appointment_files_service_1 = require("./upload-appointment-files/upload-appointment-files.service");
 let AppointmentsModule = class AppointmentsModule {
 };
 exports.AppointmentsModule = AppointmentsModule;
@@ -36,6 +43,9 @@ exports.AppointmentsModule = AppointmentsModule = __decorate([
             assign_staff_appointments_controller_1.AssignStaffAppointmentsController,
             update_appointment_status_controller_1.UpdateAppointmentStatusController,
             get_all_appointments_by_customer_controller_1.GetAllAppointmentsByCustomerController,
+            upload_appointment_files_controller_1.UploadAppointmentFilesController,
+            retrieve_appointment_files_controller_1.RetrieveAppointmentFilesController,
+            download_appointment_files_controller_1.DownloadAppointmentFilesController,
         ],
         providers: [
             supabase_request_provider_1.SupabaseRequestProvider,
@@ -47,6 +57,10 @@ exports.AppointmentsModule = AppointmentsModule = __decorate([
             update_appointment_status_service_1.UpdateAppointmentStatusService,
             get_all_appointments_service_1.GetAllAppointmentsService,
             get_all_appointments_by_customer_service_1.GetAllAppointmentsByCustomerService,
+            upload_appointment_files_service_1.UploadAppointmentFilesService,
+            appointments_helpers_1.AppointmentsHelper,
+            retrieve_appointment_files_service_1.RetrieveAppointmentFilesService,
+            download_appointmnet_files_service_1.DownloadAppointmentFilesService,
         ],
     })
 ], AppointmentsModule);

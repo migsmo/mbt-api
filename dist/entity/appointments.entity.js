@@ -9,7 +9,8 @@ class Appointments {
     selected_services;
     customer_assigned;
     is_completed;
-    is_deleted;
+    is_cancelled;
+    unpaid_amount;
 }
 exports.Appointments = Appointments;
 //# sourceMappingURL=appointments.entity.js.map

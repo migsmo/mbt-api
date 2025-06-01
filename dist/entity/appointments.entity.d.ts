@@ -6,5 +6,6 @@ export declare class Appointments {
     selected_services: string[];
     customer_assigned: string;
     is_completed: boolean;
-    is_deleted: boolean;
+    is_cancelled: boolean;
+    unpaid_amount: number;
 }

@@ -26,6 +26,7 @@ let GetAllAppointmentBillingsService = class GetAllAppointmentBillingsService {
         const appointmentBillings = await this.supabase
             .from('appointment_billings')
             .select('*')
+            .is('is_deleted', false)
             .eq('appointment_id', appointmentId);
         if (appointmentBillings.error?.message) {
             throw new base_error_1.BaseError(appointmentBillings.error?.message);

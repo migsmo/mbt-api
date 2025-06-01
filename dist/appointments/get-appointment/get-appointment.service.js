@@ -51,6 +51,8 @@ let GetAppointmentService = class GetAppointmentService {
             selectedServices: selectedServices,
             customerAssigned: appointmentData.customer_assigned,
             isCompleted: appointmentData.is_completed,
+            isCancelled: appointmentData.is_cancelled,
+            unpaidAmount: appointmentData.unpaid_amount,
         };
         return response;
     }

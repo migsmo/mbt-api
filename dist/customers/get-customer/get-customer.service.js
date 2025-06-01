@@ -32,6 +32,18 @@ let GetCustomerService = class GetCustomerService {
         if (customer.error) {
             throw new base_error_1.BaseError(`Failed to get customer: ${customer.error.message}`);
         }
+        const appointments = await this.supabase
+            .from('appointments')
+            .select('id, unpaid_amount')
+            .eq('customer_assigned', id)
+            .is('is_cancelled', false);
+        const appointmentData = appointments.data;
+        let outstandingBalance = 0;
+        if (appointmentData.length > 0) {
+            appointmentData.forEach((appointment) => {
+                outstandingBalance += appointment.unpaid_amount;
+            });
+        }
         const response = {
             id: customerData.id,
             createdAt: new Date(customerData.created_at),
@@ -42,6 +54,7 @@ let GetCustomerService = class GetCustomerService {
             email: customerData.email,
             occupation: customerData.occupation,
             additionalRemarks: customerData.additional_remarks,
+            outstandingBalance: outstandingBalance || 0,
         };
         return response;
     }

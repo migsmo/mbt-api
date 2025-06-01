@@ -25,7 +25,8 @@ let EmployeesHelper = class EmployeesHelper {
         const startDate = new Date(year, month - 1, 1).toISOString();
         const endDate = new Date(year, month, 0, 23, 59, 59).toISOString();
         const appointments = await this.appointmentsHelper.getAppointmentByStartAndEndDate(supabase, startDate, endDate);
-        const appointmentIds = appointments.map((a) => a.id);
+        const validAppointments = appointments.filter((a) => !a.is_cancelled);
+        const appointmentIds = validAppointments.map((a) => a.id);
         if (appointmentIds.length === 0)
             return new decimal_js_1.default(0);
         const appointmentServices = await supabase

@@ -23,10 +23,20 @@ let UpdateAppointmentStatusService = class UpdateAppointmentStatusService {
         this.supabase = supabase;
     }
     async updateAppointmentStatus(request) {
-        const { appointmentId, isCompleted } = request;
+        const { appointmentId, status } = request;
+        let updateObj = {};
+        if (status === 'completed') {
+            updateObj = { is_completed: true, is_cancelled: false };
+        }
+        else if (status === 'cancelled') {
+            updateObj = { is_completed: false, is_cancelled: true };
+        }
+        else {
+            throw new base_error_1.BaseError('Invalid status value');
+        }
         const appointment = await this.supabase
             .from('appointments')
-            .update({ is_completed: isCompleted })
+            .update(updateObj)
             .eq('id', appointmentId)
             .select('*')
             .single();
@@ -37,6 +47,7 @@ let UpdateAppointmentStatusService = class UpdateAppointmentStatusService {
         const response = {
             appointmentId: appointmentData.id,
             isCompleted: appointmentData.is_completed,
+            isCancelled: appointmentData.is_cancelled,
         };
         return response;
     }
