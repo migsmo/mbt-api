@@ -1,6 +1,7 @@
 import { Inject, Injectable } from '@nestjs/common';
 import { SupabaseClient } from '@supabase/supabase-js';
 import { PaginationMeta } from 'src/commons/dto/pagination-meta.dto';
+import { Appointments } from 'src/entity/appointments.entity';
 import { Customers } from 'src/entity/customers.entity';
 import { BaseError } from 'src/errors/base-error';
 import { GetCustomerResponse } from '../get-customer/dto/get-customer-response.dto';
@@ -56,8 +57,10 @@ export class GetAllCustomersService {
     }
 
     // Map the service data to the response format
-    const customers = (data as Customers[]).map((customerData) =>
-      this.mapCustomerData(customerData),
+    const customers = await Promise.all(
+      (data as Customers[]).map((customerData) =>
+        this.mapCustomerData(customerData),
+      ),
     );
 
     // Calculate pagination metadata
@@ -78,7 +81,25 @@ export class GetAllCustomersService {
       meta,
     };
   }
-  private mapCustomerData(customerData: Customers): GetCustomerResponse {
+  private async mapCustomerData(
+    customerData: Customers,
+  ): Promise<GetCustomerResponse> {
+    const appointments = await this.supabase
+      .from('appointments')
+      .select('id, unpaid_amount')
+      .eq('customer_assigned', customerData.id)
+      .is('is_cancelled', false);
+
+    const appointmentData = appointments.data as Appointments[];
+
+    let outstandingBalance = 0;
+
+    if (appointmentData.length > 0) {
+      appointmentData.forEach((appointment) => {
+        outstandingBalance += appointment.unpaid_amount;
+      });
+    }
+
     return {
       id: customerData.id,
       createdAt: new Date(customerData.created_at),
@@ -89,6 +110,7 @@ export class GetAllCustomersService {
       contactNumber: customerData.contact_no,
       occupation: customerData.occupation,
       additionalRemarks: customerData.additional_remarks,
+      outstandingBalance: outstandingBalance || 0,
     };
   }
 }

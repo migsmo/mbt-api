@@ -28,7 +28,8 @@ export class EmployeesHelper {
         endDate,
       );
 
-    const appointmentIds = appointments.map((a) => a.id);
+    const validAppointments = appointments.filter((a) => !a.is_cancelled);
+    const appointmentIds = validAppointments.map((a) => a.id);
 
     if (appointmentIds.length === 0) return new Decimal(0);
 
